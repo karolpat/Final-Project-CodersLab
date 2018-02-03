@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+<style>
+.originalLike {
+	font: bold 11px Arial;
+	text-decoration: none;
+	background-color: #EEEEEE;
+	color: #333333;
+	padding: 2px 6px 2px 6px;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #333333;
+	border-bottom: 1px solid #333333;
+	border-left: 1px solid #CCCCCC;
+}
+</style>
+<section layout:fragment="content">
+	<h2>FAQ section  <i class="fa fa-question-circle-o"></i></h2>
+	<div id="updates-box" role="tabpanel" class="collapse show"
+		th:each="faq: ${faqList}">
+		<ul class="news list-unstyled">
+			<!-- Item-->
+			<li class="d-flex justify-content-between">
+				<div class="left-col d-flex">
+					<div class="icon">
+						<i class="icon-rss-feed" style="margin-right:10px;"></i>
+					</div>
+					<div class="title">
+						<strong th:text="${faq.question}">Question</strong>
+						<p th:text="${faq.answer}">Answer</p>
+					</div>
+				</div>
+				<div class="right-col text-right">
+					<p style="display: inline-block" >Helpful?</p>
+					<!-- 					<button th:href="@{/?id=${faq.id}}" class="btn btn-success btn-large" -->
+					<!-- 						th:text="${faq.rate}" name=""> -->
+					<!-- 						Example</button> -->
+					<a th:href="@{'/like'(id=${faq.id})}" class="btn btn-success" >Like <i class="fa">&#xf087;</i>
+					</a>
+					<div class="badge badge-info" th:text="${faq.rate}" style="padding: 12px; font-size:15px;"></div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</section>
+</html>
