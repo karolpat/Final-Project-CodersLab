@@ -4,8 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 public class Room {
@@ -14,8 +15,10 @@ public class Room {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
+	@NotBlank
 	private double area;
 	
+	@NotBlank
 	private String type;
 	
 	private boolean availability;

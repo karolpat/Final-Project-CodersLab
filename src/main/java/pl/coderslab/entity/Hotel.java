@@ -10,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 public class Hotel {
@@ -17,24 +20,25 @@ public class Hotel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
+	@NotBlank
+	@Size(min = 5, max = 25)
 	private String name;
-	
+
 	private double rate;
-	
+
 	@OneToOne
+	@JoinColumn(name="localization_id")
 	private Localization localization;
-	
+
 	@ManyToOne
 	private User user;
-	
+
 	@OneToMany
 	private List<Room> rooms;
-	
-	//----------------------------------------
 
-	
-	
+	// ----------------------------------------
+
 	public long getId() {
 		return id;
 	}
@@ -82,6 +86,5 @@ public class Hotel {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
+
 }

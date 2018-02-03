@@ -10,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 public class Appartment {
@@ -17,10 +20,13 @@ public class Appartment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
+	@NotBlank
+	@Size(min=5, max=25)
 	private String name;
 	
 	@OneToOne
+	@JoinColumn(name="localization_id")
 	private Localization localization;
 	
 	private double rate;
