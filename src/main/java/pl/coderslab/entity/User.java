@@ -1,5 +1,6 @@
 package pl.coderslab.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity(name = "users")
 public class User {
@@ -27,7 +29,49 @@ public class User {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
 	
+	private double rate;
 	
+	@OneToMany
+	@JoinTable(name="apartment_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="apartment_id"))
+	private List<Appartment> appartments;
+	
+	@OneToMany
+	@JoinTable(name="hotel_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="hotel_id"))
+	private List<Hotel> hotels;
+	
+	@OneToMany
+	@JoinTable(name="room_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="room_id"))
+	private List<Room> rooms;
+	
+	
+	//-------------------------------------------------
+	
+	
+	
+	public double getRate() {
+		return rate;
+	}
+	public void setRate(double rate) {
+		this.rate = rate;
+	}
+	public List<Appartment> getAppartments() {
+		return appartments;
+	}
+	public void setAppartments(List<Appartment> appartmentList) {
+		this.appartments = appartmentList;
+	}
+	public List<Hotel> getHotels() {
+		return hotels;
+	}
+	public void setHotels(List<Hotel> hotelList) {
+		this.hotels = hotelList;
+	}
+	public List<Room> getRooms() {
+		return rooms;
+	}
+	public void setRooms(List<Room> roomList) {
+		this.rooms = roomList;
+	}
 	public Long getId() {
 		return id;
 	}
