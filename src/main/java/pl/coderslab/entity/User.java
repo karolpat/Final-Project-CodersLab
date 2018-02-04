@@ -1,7 +1,6 @@
 package pl.coderslab.entity;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
@@ -36,12 +35,14 @@ public class User {
 	@Size(min=4, max=40)
 	private String email;
 	
-	private int enabled;
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	private boolean enabled=true;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinColumn(name="user_role")
+	private Role role;
 	
-	private double rate;
+	@Column(columnDefinition="Decimal(2,1) default 0.0")
+	private double rate=0;
 	
 	@OneToMany
 	@JoinTable(name="apartment_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="apartment_id"))
@@ -102,22 +103,22 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public int getEnabled() {
+	public boolean getEnabled() {
 		return enabled;
 	}
-	public void setEnabled(int enabled) {
+	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	public Set<Role> getRoles() {
-		return roles;
+	public Role getRole() {
+		return role;
 	}
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public void setRole(Role roles) {
+		this.role = roles;
 	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
-				+ ", roles=" + roles + "]";
+				+ ", roles=" + role + ", email= "+email+"]";
 	}
 	public String getEmail() {
 		return email;

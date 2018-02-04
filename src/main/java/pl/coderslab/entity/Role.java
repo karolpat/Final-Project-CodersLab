@@ -18,7 +18,17 @@ public class Role {
 	@Column(name = "role")
 	private String name;
 	
+	private String subName;
 	
+	
+	
+	
+	public String getSubName() {
+		return subName;
+	}
+	public void setSubName(String subRole) {
+		this.subName = subRole;
+	}
 	public int getId() {
 		return id;
 	}
