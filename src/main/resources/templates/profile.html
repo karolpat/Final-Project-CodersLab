@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+	
+<section layout:fragment="content">
+	<section class="dashboard-counts section-padding">
+	<div class="card data-usage text-primary" style="margin-bottom: 25px; text-align: center">
+			<h2>Personal details</h2>
+			</div>
+			<div class="container-fluid">
+				<div class="row">
+					<!-- Count item widget-->
+					<div class="col-xl-2 col-md-4 col-6">
+						<div class="wrapper count-title d-flex">
+							<div class="icon">
+								<i class="icon-user"></i>
+							</div>
+							<div class="name">
+								<strong class="text-uppercase">First name</strong>
+								<strong class="text-uppercase">Last name</strong><strong class="text-primary" th:text="${currUser.firstName}">first name
+									</strong><strong class="text-primary" th:text="${currUser.lastName}">Last name</strong>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xl-2 col-md-4 col-6">
+						<div class="wrapper count-title d-flex">
+							<div class="icon">
+								<i class="icon-check"></i>
+							</div>
+							<div class="name">
+								<strong class="text-uppercase" th:text="'Email adress'">Rate</strong>
+								<strong class="text-primary" th:text="${currUser.email}">date</strong>
+							</div>
+						</div>
+					</div>
+					<!-- Count item widget-->
+					<div class="col-xl-2 col-md-4 col-6">
+						<div class="wrapper count-title d-flex">
+							<div class="icon">
+								<i class="icon-padnote"></i>
+							</div>
+							<div class="name">
+								<strong class="text-uppercase" th:text="'Active since'">Active since</strong>
+								<strong class="text-primary" th:text="${currUser.created}">date</strong>
+							</div>
+						</div>
+					</div>
+					<!-- Count item widget-->
+					<div class="col-xl-3 col-md-4 col-6">
+						<div class="wrapper count-title d-flex">
+							<div class="icon">
+								<i class="icon-check"></i>
+							</div>
+							<div class="name">
+								<strong class="text-uppercase" th:text="'Average rate'">Rate</strong>
+								<strong class="text-primary" th:text="${currUser.rate}">date</strong>
+							</div>
+						</div>
+					</div>
+					<!-- Count item widget-->
+					<div class="col-xl-3 col-md-4 col-6">
+						<div class="wrapper count-title d-flex">
+							<div class="icon">
+								<i class="icon-bill"></i>
+							</div>
+							<div class="name">
+								<strong class="text-uppercase" th:text="'Address'">Address</strong>
+								<span th:text="${local.country}">Country</span>
+								<span th:text="${local.city}">City</span>
+								<span th:text="${local.street +' '+ local.streetNumber}">Street number</span>
+								<span th:text="${local.postalCode}">postalCode</span>
+							</div>
+						</div>
+					</div>
+					<!-- Count item widget-->
+				</div>
+			</div>
+		</section>
+</section>
+</html>	
