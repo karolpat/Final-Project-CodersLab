@@ -18,9 +18,7 @@ public class Localization {
 	private String city;
 	
 	private String street;
-	
-	private int streetNumber;
-	
+		
 	private String postalCode;
 	
 	@OneToOne
@@ -100,18 +98,11 @@ public class Localization {
 		this.street = street;
 	}
 
-	public int getStreetNumber() {
-		return streetNumber;
-	}
-
-	public void setStreetNumber(int streetNumber) {
-		this.streetNumber = streetNumber;
-	}
 
 	@Override
 	public String toString() {
 		return "Localization [id=" + id + ", country=" + country + ", city=" + city + ", street=" + street
-				+ ", streetNumber=" + streetNumber + ", hotel=" + hotel + ", appartment=" + appartment + ", user="
+				+  ", hotel=" + hotel + ", appartment=" + appartment + ", user="
 				+ user + "]";
 	}
 	

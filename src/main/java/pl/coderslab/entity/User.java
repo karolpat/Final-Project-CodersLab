@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -30,6 +31,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private LocalDate created;
+	private String gender;	
 	
 	@NotBlank
 	@Size(min=7)
@@ -60,6 +62,10 @@ public class User {
 	@OneToMany
 	@JoinTable(name="room_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="room_id"))
 	private List<Room> rooms;
+	
+	@OneToOne
+	@JoinColumn(name="localization_id")
+	private Localization localization;
 		
 	//-------------------------------------------------
 	
@@ -67,6 +73,18 @@ public class User {
 	
 	public double getRate() {
 		return rate;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public Localization getLocalization() {
+		return localization;
+	}
+	public void setLocalization(Localization localization) {
+		this.localization = localization;
 	}
 	public LocalDate getCreated() {
 		return created;
