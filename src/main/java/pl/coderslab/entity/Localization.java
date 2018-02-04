@@ -21,11 +21,16 @@ public class Localization {
 	
 	private int streetNumber;
 	
+	private String postalCode;
+	
 	@OneToOne
 	private Hotel hotel;
 	
 	@OneToOne
 	private Appartment appartment;
+	
+	@OneToOne
+	private User user;
 	
 	//-------------------------
 	
@@ -33,6 +38,22 @@ public class Localization {
 
 	public long getId() {
 		return id;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Hotel getHotel() {
@@ -85,6 +106,13 @@ public class Localization {
 
 	public void setStreetNumber(int streetNumber) {
 		this.streetNumber = streetNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "Localization [id=" + id + ", country=" + country + ", city=" + city + ", street=" + street
+				+ ", streetNumber=" + streetNumber + ", hotel=" + hotel + ", appartment=" + appartment + ", user="
+				+ user + "]";
 	}
 	
 	
