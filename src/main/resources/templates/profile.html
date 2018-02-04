@@ -18,8 +18,9 @@
 							</div>
 							<div class="name">
 								<strong class="text-uppercase">First name</strong>
-								<strong class="text-uppercase">Last name</strong><strong class="text-primary" th:text="${currUser.firstName}">first name
-									</strong><strong class="text-primary" th:text="${currUser.lastName}">Last name</strong>
+								<strong class="text-uppercase">Last name</strong>
+								<strong class="text-primary" th:text="${currUser.firstName != null} ? ${currUser.firstName} : 'First name'">first name</strong>
+								<strong class="text-primary" th:text="${currUser.lastName != null} ? ${currUser.lastName} : 'Last name'">Last name</strong>
 							</div>
 						</div>
 					</div>
@@ -67,15 +68,18 @@
 							</div>
 							<div class="name">
 								<strong class="text-uppercase" th:text="'Address'">Address</strong>
-								<span th:text="${local.country}">Country</span>
-								<span th:text="${local.city}">City</span>
-								<span th:text="${local.street +' '+ local.streetNumber}">Street number</span>
-								<span th:text="${local.postalCode}">postalCode</span>
+								<span th:text="${currUser.localization != null} ? ${currUser.localization.country} : 'Country'" >Country</span>
+								<span th:text="${currUser.localization != null} ? ${currUser.localization.city} : 'City'"  >City</span>
+								<span th:text="${currUser.localization != null}? ${currUser.localization.street} : 'Street'"   >Street number</span>
+								<span th:text="${currUser.localization != null} ? ${currUser.localization.postalCode} : 'Postal code'"  >postalCode</span>
 							</div>
 						</div>
 					</div>
 					<!-- Count item widget-->
 				</div>
+			</div>
+			<div>
+			<a th:href="@{'/profile/edit'(username=${currUser.username})}" class="btn btn-success" > Edit <span class="fa fa-pencil"></span></a>
 			</div>
 		</section>
 </section>
