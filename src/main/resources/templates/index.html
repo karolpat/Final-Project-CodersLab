@@ -33,9 +33,6 @@
 				</div>
 				<div class="right-col text-right">
 					<p style="display: inline-block" >Helpful?</p>
-					<!-- 					<button th:href="@{/?id=${faq.id}}" class="btn btn-success btn-large" -->
-					<!-- 						th:text="${faq.rate}" name=""> -->
-					<!-- 						Example</button> -->
 					<a th:href="@{'/like'(id=${faq.id})}" class="btn btn-success" >Like <i class="fa">&#xf087;</i>
 					</a>
 					<div class="badge badge-info" th:text="${faq.rate}" style="padding: 12px; font-size:15px;"></div>

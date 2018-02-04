@@ -50,6 +50,14 @@
                 <input id="register-passowrd" type="password" name="registerPassword" required class="input-material" th:field="*{password}">
                 <label for="register-passowrd" class="label-material">Password        </label>
               </div>
+<!--               <div class="form-group-material"> -->
+<!--               <label for="role-select" class="label-material">Please select your position</label> -->
+<!--               <select th:field="${user.role}" id="role-select"> -->
+<!--                 <option th:each="role,iterStat : ${roleList}" th:unless="${iterStat.index &gt; 1}"    -->
+<!--                         th:value="${role.id}" th:text="${role.subName}"></option> -->
+<!--             	</select> -->
+                
+<!--               </div> -->
               <div class="terms-conditions d-flex justify-content-center">
                 <input id="license" type="checkbox" class="form-control-custom">
                 <label for="license">Agree the terms and policy</label>

@@ -48,7 +48,7 @@
 				<div class="sidenav-header-inner text-center">
 					<img src="img/avatar-1.jpg" alt="person"
 						class="img-fluid rounded-circle">
-					<h2 class="h5" sec:authentication="name">Anderson Hardy</h2>
+<!-- role authentication -->	<h2 class="h5" sec:authentication="name">Anderson Hardy</h2>
 					<span sec:authentication="authorities">Web Developer</span>
 				</div>
 				<!-- Small Brand information, appears on minimized sidebar-->
@@ -214,7 +214,7 @@
 										</strong></a></li>
 								</ul></li>
 							<li class="nav-item">
-							<li class="nav-item"><form th:action="@{/logout}"
+							<li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')"><form th:action="@{/logout}"
 									method="post">
 									<button type="submit" class="nav-link logout"
 										style="color: white; background-color: #393836; margin-left: 5px;">
@@ -222,7 +222,7 @@
 									</button>
 								</form></li>
 							<li class="nav-item">
-							<li class="nav-item"><form th:action="@{/login}"
+<!--login  -->					<li class="nav-item" sec:authorize="hasRole('ROLE_ANONYMOUS')"><form th:action="@{/login}"
 									method="post">
 									<button type="submit" class="nav-link logout"
 										style="color: white; background-color: #393836; margin-left: 5px;">
