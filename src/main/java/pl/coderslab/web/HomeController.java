@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,7 @@ import pl.coderslab.repo.FaqRepo;
 import pl.coderslab.repo.LocalizationRepo;
 import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.StudentRepo;
+import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.UserService;
 
 @Controller
@@ -62,11 +64,25 @@ public class HomeController {
 	public String local(Model model) {
 		
 		User user = userService.findByUserName(currentUser());
-		Localization local = localRepo.findByUserId(user.getId());
 		
-		model.addAttribute("local", local);
 		model.addAttribute("currUser", user);
 		return "profile";
+	}
+	
+	@GetMapping("/profile/edit")
+	public String editForm(@RequestParam String username, Model model) {
+		
+		User user = userService.findByUserName(username);
+		
+		model.addAttribute("user", user);
+		
+		return "editForm";
+	}
+	
+	@PostMapping("/profile/edit")
+	public String saveEdit() {
+		
+		return "redirect:/user/profile";
 	}
 	
 	@RequestMapping("/charts")
@@ -74,7 +90,7 @@ public class HomeController {
 		return "charts";
 	}
 	
-	@RequestMapping("/forms")
+	@RequestMapping("/*/forms")
 	public String forms() {
 		return "forms";
 	}
