@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.joda.time.LocalDate;
 
 @Entity(name = "users")
 public class User {
@@ -25,6 +26,10 @@ public class User {
 	
 	@Column(nullable = false, unique = true)
 	private String username;
+	
+	private String firstName;
+	private String lastName;
+	private LocalDate created;
 	
 	@NotBlank
 	@Size(min=7)
@@ -55,14 +60,31 @@ public class User {
 	@OneToMany
 	@JoinTable(name="room_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="room_id"))
 	private List<Room> rooms;
-	
-	
+		
 	//-------------------------------------------------
 	
 	
 	
 	public double getRate() {
 		return rate;
+	}
+	public LocalDate getCreated() {
+		return created;
+	}
+	public void setCreated(LocalDate format) {
+		this.created = format;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	public void setRate(double rate) {
 		this.rate = rate;
