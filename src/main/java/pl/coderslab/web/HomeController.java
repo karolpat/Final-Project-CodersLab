@@ -12,15 +12,16 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.coderslab.entity.Faq;
+import pl.coderslab.entity.Role;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.FaqRepo;
+import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.StudentRepo;
 import pl.coderslab.service.UserService;
 
@@ -37,6 +38,9 @@ public class HomeController {
 	@Autowired
 	private FaqRepo faqRepo;
 	
+	@Autowired
+	private RoleRepo roleRepo;
+	
 	public HomeController(UserService userService) {
 		this.userService=userService;
 	}
@@ -46,21 +50,22 @@ public class HomeController {
 		
 		User u = new User();
 		model.addAttribute("user", u);
+		
+		model.addAttribute("roleList", roleRepo.findAll());
 		return "register";
 	}
 	
 	@RequestMapping(value="/register", method = RequestMethod.POST)
 	public String register(@Valid User user, BindingResult bresult, Model model) {
-
 		if (bresult.hasErrors()) {
-
-			model.addAttribute("error", bresult.getFieldError());
+			log.info("błąd"+user.toString());
 			model.addAttribute(user);
 			return "/register";
 
 		} else {
+			log.info(user.toString());
 			userService.saveUser(user);
-			return "redirect:login";
+			return "redirect:/login";
 		}
 	}
 
