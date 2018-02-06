@@ -2,87 +2,123 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorator="layout2">
-	
+
 <section layout:fragment="content">
 	<section class="dashboard-counts section-padding">
-	<div class="card data-usage text-primary" style="margin-bottom: 25px; text-align: center">
+		<div class="card data-usage text-primary"
+			style="margin-bottom: 25px; text-align: center">
 			<h2>Personal details</h2>
+		</div>
+		<div class="container-fluid">
+			<img th:src="@{${currUser.avatar}}" alt="User avatar"
+				style="border-radius: 50%; margin-left: auto; margin-right: auto; width: 15%; display: block">
+		</div>
+		<div class="line">
+			<div align="center">
+				<a href="#upload" aria-expanded="false" data-toggle="collapse">
+					<i class="icon-interface-windows"></i>Change avatar
+				</a>
+				<ul id="upload" class="collapse list-unstyled ">
+					<li><form method="POST" th:action="@{/user/edit}"
+							enctype="multipart/form-data">
+							<input type="file" name="file" th:field="${currUser.avatar}" /><br />
+							<br /> <input type="submit" value="Submit" />
+						</form></li>
+				</ul>
 			</div>
-			<div class="container-fluid">
-				<div class="row">
-					<!-- Count item widget-->
-					<div class="col-xl-2 col-md-4 col-6">
-						<div class="wrapper count-title d-flex">
-							<div class="icon">
-								<i class="icon-user"></i>
-							</div>
-							<div class="name">
-								<strong class="text-uppercase">First name</strong>
-								<strong class="text-uppercase">Last name</strong>
-								<strong class="text-primary" th:text="${currUser.firstName != null} ? ${currUser.firstName} : 'First name'">first name</strong>
-								<strong class="text-primary" th:text="${currUser.lastName != null} ? ${currUser.lastName} : 'Last name'">Last name</strong>
-							</div>
+			<hr>
+			<div class="row">
+
+				<!-- Count item widget-->
+				<div class="col-xl-2 col-md-4 col-6">
+					<div class="wrapper count-title d-flex">
+						<div class="icon">
+							<i class="icon-user"></i>
+						</div>
+						<div class="name">
+							<strong class="text-uppercase">First name</strong> <strong
+								class="text-uppercase">Last name</strong> <strong
+								class="text-primary"
+								th:text="${currUser.firstName != null} ? ${currUser.firstName} : 'First name'">first
+								name</strong> <strong class="text-primary"
+								th:text="${currUser.lastName != null} ? ${currUser.lastName} : 'Last name'">Last
+								name</strong>
 						</div>
 					</div>
-					
-					<div class="col-xl-2 col-md-4 col-6">
-						<div class="wrapper count-title d-flex">
-							<div class="icon">
-								<i class="icon-check"></i>
-							</div>
-							<div class="name">
-								<strong class="text-uppercase" th:text="'Email adress'">Email</strong>
-								<strong class="text-primary" th:text="${currUser.email}">email</strong>
-								<strong class="text-uppercase" th:text="'Phone number'">PHone</strong>
-								<strong class="text-primary" th:text="${currUser.phoneNumber}">phone</strong>
-							</div>
-						</div>
-					</div>
-					<!-- Count item widget-->
-					<div class="col-xl-2 col-md-4 col-6">
-						<div class="wrapper count-title d-flex">
-							<div class="icon">
-								<i class="icon-padnote"></i>
-							</div>
-							<div class="name">
-								<strong class="text-uppercase" th:text="'Active since'">Active since</strong>
-								<strong class="text-primary" th:text="${currUser.created}">date</strong>
-							</div>
-						</div>
-					</div>
-					<!-- Count item widget-->
-					<div class="col-xl-3 col-md-4 col-6">
-						<div class="wrapper count-title d-flex">
-							<div class="icon">
-								<i class="icon-check"></i>
-							</div>
-							<div class="name">
-								<strong class="text-uppercase" th:text="'Average rate'">Rate</strong>
-								<strong class="text-primary" th:text="${currUser.rate}">date</strong>
-							</div>
-						</div>
-					</div>
-					<!-- Count item widget-->
-					<div class="col-xl-3 col-md-4 col-6">
-						<div class="wrapper count-title d-flex">
-							<div class="icon">
-								<i class="icon-bill"></i>
-							</div>
-							<div class="name">
-								<strong class="text-uppercase" th:text="'Address'">Address</strong>
-								<span th:text="${currUser.country != null} ? ${currUser.country} : 'Country'" >Country</span>
-								<span th:text="${currUser.city != null} ? ${currUser.city} : 'City'"  >City</span>
-								<span th:text="${currUser.street != null}? ${currUser.street} : 'Street'"   >Street number</span>
-								<span th:text="${currUser.postalCode != null} ? ${currUser.postalCode} : 'Postal code'"  >postalCode</span>
-							</div>
-						</div>
-					</div>
-					<!-- Count item widget-->
 				</div>
+
+				<div class="col-xl-2 col-md-4 col-6">
+					<div class="wrapper count-title d-flex">
+						<div class="icon">
+							<i class="icon-check"></i>
+						</div>
+						<div class="name">
+							<strong class="text-uppercase" th:text="'Email adress'">Email</strong>
+							<strong class="text-primary" th:text="${currUser.email}">email</strong>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-2 col-md-4 col-6">
+					<div class="wrapper count-title d-flex">
+						<div class="icon">
+							<i class="icon-check"></i>
+						</div>
+						<div class="name">
+							<strong class="text-uppercase" th:text="'Phone number'">PHone</strong>
+							<strong class="text-primary" th:text="${currUser.phoneNumber}">phone</strong>
+						</div>
+					</div>
+				</div>
+				<!-- Count item widget-->
+				<div class="col-xl-2 col-md-4 col-6">
+					<div class="wrapper count-title d-flex">
+						<div class="icon">
+							<i class="icon-padnote"></i>
+						</div>
+						<div class="name">
+							<strong class="text-uppercase" th:text="'Active since'">Active
+								since</strong> <strong class="text-primary" th:text="${currUser.created}">date</strong>
+						</div>
+					</div>
+				</div>
+				<!-- Count item widget-->
+				<div class="col-xl-2 col-md-4 col-6">
+					<div class="wrapper count-title d-flex">
+						<div class="icon">
+							<i class="icon-check"></i>
+						</div>
+						<div class="name">
+							<strong class="text-uppercase" th:text="'Average rate'">Rate</strong>
+							<strong class="text-primary" th:text="${currUser.rate}">date</strong>
+						</div>
+					</div>
+				</div>
+				<!-- Count item widget-->
+				<div class="col-xl-2 col-md-4 col-6">
+					<div class="wrapper count-title d-flex">
+						<div class="icon">
+							<i class="icon-bill"></i>
+						</div>
+						<div class="name">
+							<strong class="text-uppercase" th:text="'Address'">Address</strong>
+							<span
+								th:text="${currUser.country != null} ? ${currUser.country} : 'Country'">Country</span>
+							<span
+								th:text="${currUser.city != null} ? ${currUser.city} : 'City'">City</span>
+							<span
+								th:text="${currUser.street != null}? ${currUser.street} : 'Street'">Street
+								number</span> <span
+								th:text="${currUser.postalCode != null} ? ${currUser.postalCode} : 'Postal code'">postalCode</span>
+						</div>
+					</div>
+				</div>
+				<!-- Count item widget-->
 			</div>
-			<div>
-			<a th:href="@{'/profile/edit'(username=${currUser.username})}" class="btn btn-success" > Edit <span class="fa fa-pencil"></span></a>
-			</div>
-		</section>
+		</div>
+		<div>
+			<a th:href="@{'/profile/edit'(username=${currUser.username})}"
+				class="btn btn-success"> Edit <span class="fa fa-pencil"></span></a>
+		</div>
+	</section>
 </section>
-</html>	
+</html>

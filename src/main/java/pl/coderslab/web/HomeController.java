@@ -62,12 +62,21 @@ public class HomeController {
 		return authentication.getName();
 	}
 	
-	@RequestMapping({"/user/profile", "/manager/profile"})
-	public String local(Model model) {
+	@GetMapping({"/user/profile", "/manager/profile"})
+	public String profile(Model model) {
 		
 		User user = userService.findByUserName(currentUser());
 		
 		model.addAttribute("currUser", user);
+		return "profile";
+	}
+	
+	@PostMapping({"/user/profile", "/manager/profile"})
+	public String updateAvatar(User user) {
+	
+		String avatar = user.getAvatar();
+		user.setAvatar("../storage/"+avatar);
+		userRepo.save(user);
 		return "profile";
 	}
 	
@@ -142,6 +151,7 @@ public class HomeController {
 		} else {
 			log.info(user.toString());
 			user.setCreated(new LocalDate());
+			user.setAvatar("../storage/default.jpg");
 			userService.saveUser(user);
 			return "redirect:/login";
 		}
