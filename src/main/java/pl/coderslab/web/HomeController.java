@@ -1,5 +1,10 @@
 package pl.coderslab.web;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.validation.Valid;
 
 import org.joda.time.LocalDate;
@@ -15,11 +20,14 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.coderslab.entity.Faq;
 import pl.coderslab.entity.User;
@@ -33,6 +41,8 @@ import pl.coderslab.service.UserService;
 @Controller
 public class HomeController {
 
+	private static String UPLOADED_FOLDER = "/home/karolpat/eclipse-workspace/demo/src/main/resources/static/storage/";
+
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
 	private UserService userService;
@@ -45,10 +55,10 @@ public class HomeController {
 
 	@Autowired
 	private RoleRepo roleRepo;
-	
+
 	@Autowired
 	private LocalizationRepo localRepo;
-	
+
 	@Autowired
 	private UserRepo userRepo;
 
@@ -61,46 +71,61 @@ public class HomeController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication.getName();
 	}
-	
-	@GetMapping({"/user/profile", "/manager/profile"})
+
+	@GetMapping({ "/user/profile", "/manager/profile" })
 	public String profile(Model model) {
-		
+
 		User user = userService.findByUserName(currentUser());
-		
+
 		model.addAttribute("currUser", user);
 		return "profile";
 	}
-	
-	@PostMapping({"/user/profile", "/manager/profile"})
-	public String updateAvatar(User user) {
-	
-		String avatar = user.getAvatar();
-		user.setAvatar("../storage/"+avatar);
-		userRepo.save(user);
-		return "profile";
+
+	@PostMapping("/user/upload")
+	public String updateAvatar(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+
+		log.info(file.getName());
+		log.info(file.getOriginalFilename());
+		if (file.isEmpty()) {
+			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+			return "redirect:/user/profile";
+		}
+
+		try {
+
+			// Get the file and save it somewhere
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename().replaceAll(" ", ""));
+			Files.write(path, bytes);
+
+			redirectAttributes.addFlashAttribute("message",
+					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
+			User user = userService.findByUserName(currentUser());
+			// String avatar = user.getAvatar();
+			user.setAvatar("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
+			userRepo.save(user);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "redirect:/user/profile";
+		// return "profile";
 	}
-	
+
 	@GetMapping("/profile/edit")
-	public String editForm( Model model) {
-		
+	public String editForm(Model model) {
+
 		User user = userService.findByUserName(currentUser());
-		
+
 		model.addAttribute("user", user);
-		
+
 		return "editForm";
 	}
-	
+
 	@PostMapping("/profile/edit")
-	public String saveEdit(Model model,
-			String firstName,
-			String lastName,
-			String gender,
-			String country,
-			String city,
-			String street,
-			int phoneNumber,
-			String postalCode) {
-		
+	public String saveEdit(Model model, String firstName, String lastName, String gender, String country, String city,
+			String street, int phoneNumber, String postalCode) {
+
 		User user = userService.findByUserName(currentUser());
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
@@ -112,20 +137,20 @@ public class HomeController {
 		user.setPostalCode(postalCode);
 		log.info(user.toString());
 		userRepo.save(user);
-		
+
 		return "redirect:/user/profile";
 	}
-	
+
 	@RequestMapping("/charts")
 	public String charts() {
 		return "charts";
 	}
-	
+
 	@RequestMapping("/*/forms")
 	public String forms() {
 		return "forms";
 	}
-	
+
 	@RequestMapping("/tables")
 	public String tables() {
 		return "tables";
@@ -179,11 +204,16 @@ public class HomeController {
 		return "redirect:/";
 	}
 
-
 	@RequestMapping("/students")
 	public String list(ModelMap model, @SortDefault("firstName") Pageable pageable) {
 		model.addAttribute("studs", stud.findAll(pageable));
 
 		return "list";
+	}
+	
+	@ModelAttribute
+	public void userModer(Model model) {
+		User user = userService.findByUserName(currentUser());
+		model.addAttribute("currUser", user);
 	}
 }

@@ -46,8 +46,10 @@
 				class="sidenav-header d-flex align-items-center justify-content-center">
 				<!-- User Info-->
 				<div class="sidenav-header-inner text-center">
-					<img src="img/avatar-1.jpg" alt="person"
-						class="img-fluid rounded-circle">
+<!-- 					<img src="img/avatar-1.jpg" alt="person" -->
+<!-- 						class="img-fluid rounded-circle"> -->
+						<img th:src="@{${currUser.avatar}}" alt="avatar"
+													class="img-fluid rounded-circle">
 <!-- role authentication -->	<h2 class="h5" sec:authentication="name">Anderson Hardy</h2>
 					<span sec:authentication="authorities">Web Developer</span>
 				</div>

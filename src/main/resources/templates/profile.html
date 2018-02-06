@@ -10,6 +10,9 @@
 			<h2>Personal details</h2>
 		</div>
 		<div class="container-fluid">
+			<div th:if="${message}">
+				<h2 th:text="${message}">mess</h2>
+			</div>
 			<img th:src="@{${currUser.avatar}}" alt="User avatar"
 				style="border-radius: 50%; margin-left: auto; margin-right: auto; width: 15%; display: block">
 		</div>
@@ -19,10 +22,10 @@
 					<i class="icon-interface-windows"></i>Change avatar
 				</a>
 				<ul id="upload" class="collapse list-unstyled ">
-					<li><form method="POST" th:action="@{/user/edit}"
+					<li><form method="POST" th:action="@{/user/upload}"
 							enctype="multipart/form-data">
-							<input type="file" name="file" th:field="${currUser.avatar}" /><br />
-							<br /> <input type="submit" value="Submit" />
+							<input type="file" th:name="file"><br/>
+							<br/> <input type="submit" value="Submit"/>
 						</form></li>
 				</ul>
 			</div>
