@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.coderslab.entity.Faq;
-import pl.coderslab.entity.Localization;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.FaqRepo;
 import pl.coderslab.repo.LocalizationRepo;
@@ -49,6 +48,9 @@ public class HomeController {
 	
 	@Autowired
 	private LocalizationRepo localRepo;
+	
+	@Autowired
+	private UserRepo userRepo;
 
 	public HomeController(UserService userService) {
 		this.userService = userService;
@@ -70,9 +72,9 @@ public class HomeController {
 	}
 	
 	@GetMapping("/profile/edit")
-	public String editForm(@RequestParam String username, Model model) {
+	public String editForm( Model model) {
 		
-		User user = userService.findByUserName(username);
+		User user = userService.findByUserName(currentUser());
 		
 		model.addAttribute("user", user);
 		
@@ -80,7 +82,27 @@ public class HomeController {
 	}
 	
 	@PostMapping("/profile/edit")
-	public String saveEdit() {
+	public String saveEdit(Model model,
+			String firstName,
+			String lastName,
+			String gender,
+			String country,
+			String city,
+			String street,
+			int phoneNumber,
+			String postalCode) {
+		
+		User user = userService.findByUserName(currentUser());
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setGender(gender);
+		user.setCountry(country);
+		user.setCity(city);
+		user.setStreet(street);
+		user.setPhoneNumber(phoneNumber);
+		user.setPostalCode(postalCode);
+		log.info(user.toString());
+		userRepo.save(user);
 		
 		return "redirect:/user/profile";
 	}

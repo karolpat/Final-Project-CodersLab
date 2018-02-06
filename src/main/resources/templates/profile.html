@@ -31,8 +31,10 @@
 								<i class="icon-check"></i>
 							</div>
 							<div class="name">
-								<strong class="text-uppercase" th:text="'Email adress'">Rate</strong>
-								<strong class="text-primary" th:text="${currUser.email}">date</strong>
+								<strong class="text-uppercase" th:text="'Email adress'">Email</strong>
+								<strong class="text-primary" th:text="${currUser.email}">email</strong>
+								<strong class="text-uppercase" th:text="'Phone number'">PHone</strong>
+								<strong class="text-primary" th:text="${currUser.phoneNumber}">phone</strong>
 							</div>
 						</div>
 					</div>
@@ -68,10 +70,10 @@
 							</div>
 							<div class="name">
 								<strong class="text-uppercase" th:text="'Address'">Address</strong>
-								<span th:text="${currUser.localization != null} ? ${currUser.localization.country} : 'Country'" >Country</span>
-								<span th:text="${currUser.localization != null} ? ${currUser.localization.city} : 'City'"  >City</span>
-								<span th:text="${currUser.localization != null}? ${currUser.localization.street} : 'Street'"   >Street number</span>
-								<span th:text="${currUser.localization != null} ? ${currUser.localization.postalCode} : 'Postal code'"  >postalCode</span>
+								<span th:text="${currUser.country != null} ? ${currUser.country} : 'Country'" >Country</span>
+								<span th:text="${currUser.city != null} ? ${currUser.city} : 'City'"  >City</span>
+								<span th:text="${currUser.street != null}? ${currUser.street} : 'Street'"   >Street number</span>
+								<span th:text="${currUser.postalCode != null} ? ${currUser.postalCode} : 'Postal code'"  >postalCode</span>
 							</div>
 						</div>
 					</div>

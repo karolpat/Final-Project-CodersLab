@@ -32,6 +32,12 @@ public class User {
 	private String lastName;
 	private LocalDate created;
 	private String gender;	
+	private String country;
+	private String city;
+	private String street;
+	private String postalCode;
+	private int phoneNumber;
+	
 	
 	@NotBlank
 	@Size(min=7)
@@ -63,9 +69,9 @@ public class User {
 	@JoinTable(name="room_user", joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="room_id"))
 	private List<Room> rooms;
 	
-	@OneToOne
-	@JoinColumn(name="localization_id")
-	private Localization localization;
+//	@OneToOne
+//	@JoinColumn(name="localization_id")
+//	private Localization localization;
 		
 	//-------------------------------------------------
 	
@@ -74,18 +80,48 @@ public class User {
 	public double getRate() {
 		return rate;
 	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public String getPostalCode() {
+		return postalCode;
+	}
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+	public int getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(int phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 	public String getGender() {
 		return gender;
 	}
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public Localization getLocalization() {
-		return localization;
-	}
-	public void setLocalization(Localization localization) {
-		this.localization = localization;
-	}
+//	public Localization getLocalization() {
+//		return localization;
+//	}
+//	public void setLocalization(Localization localization) {
+//		this.localization = localization;
+//	}
 	public LocalDate getCreated() {
 		return created;
 	}
@@ -157,8 +193,11 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
-				+ ", roles=" + role + ", email= "+email+"]";
+		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", created=" + created + ", gender=" + gender + ", country=" + country + ", city=" + city
+				+ ", street=" + street + ", postalCode=" + postalCode + ", phoneNumber=" + phoneNumber + ", password="
+				+ password + ", email=" + email + ", enabled=" + enabled + ", role=" + role + ", rate=" + rate
+				+ ", appartments=" + appartments + ", hotels=" + hotels + ", rooms=" + rooms + "]";
 	}
 	public String getEmail() {
 		return email;
