@@ -37,6 +37,7 @@ public class User {
 	private String street;
 	private String postalCode;
 	private int phoneNumber;
+	private String avatar;
 	
 	
 	@NotBlank
@@ -77,8 +78,15 @@ public class User {
 	
 	
 	
+	
 	public double getRate() {
 		return rate;
+	}
+	public String getAvatar() {
+		return avatar;
+	}
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 	public String getCountry() {
 		return country;
