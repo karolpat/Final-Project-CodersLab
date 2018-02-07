@@ -11,13 +11,10 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,7 +31,6 @@ import pl.coderslab.entity.User;
 import pl.coderslab.repo.FaqRepo;
 import pl.coderslab.repo.LocalizationRepo;
 import pl.coderslab.repo.RoleRepo;
-import pl.coderslab.repo.StudentRepo;
 import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.UserService;
 
@@ -47,8 +43,8 @@ public class HomeController {
 
 	private UserService userService;
 
-	@Autowired
-	private StudentRepo stud;
+//	@Autowired
+//	private StudentRepo stud;
 
 	@Autowired
 	private FaqRepo faqRepo;
@@ -204,12 +200,12 @@ public class HomeController {
 		return "redirect:/";
 	}
 
-	@RequestMapping("/students")
-	public String list(ModelMap model, @SortDefault("firstName") Pageable pageable) {
-		model.addAttribute("studs", stud.findAll(pageable));
-
-		return "list";
-	}
+//	@RequestMapping("/students")
+//	public String list(ModelMap model, @SortDefault("firstName") Pageable pageable) {
+//		model.addAttribute("studs", stud.findAll(pageable));
+//
+//		return "list";
+//	}
 	
 	@ModelAttribute
 	public void userModer(Model model) {

@@ -48,8 +48,9 @@
 				<div class="sidenav-header-inner text-center">
 <!-- 					<img src="img/avatar-1.jpg" alt="person" -->
 <!-- 						class="img-fluid rounded-circle"> -->
+	<div th:if="${currUser.avatar}">
 						<img th:src="@{${currUser.avatar}}" alt="avatar"
-													class="img-fluid rounded-circle">
+													class="img-fluid rounded-circle"></div>
 <!-- role authentication -->	<h2 class="h5" sec:authentication="name">Anderson Hardy</h2>
 					<span sec:authentication="authorities">Web Developer</span>
 				</div>

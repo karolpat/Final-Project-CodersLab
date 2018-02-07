@@ -27,3 +27,4 @@ mvnw
 mvnw.cmd
 plik.sql
 /bin
+/src/main/resources/static/storage
