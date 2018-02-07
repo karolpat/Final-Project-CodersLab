@@ -1,10 +1,14 @@
 package pl.coderslab.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -23,6 +27,9 @@ public class Room {
 	
 	private boolean availability;
 	
+	@OneToMany
+	private List<Date> date;
+	
 	@ManyToOne
 	private Hotel hotel;
 	
@@ -30,7 +37,12 @@ public class Room {
 	private Appartment appartment;
 	
 	@ManyToOne
-	private User user;
+	private User owner;
+	
+	@ManyToMany
+	private List<User> host;
+	
+	private boolean promoted;
 
 	//------------------------------------------
 	
@@ -40,13 +52,45 @@ public class Room {
 		return id;
 	}
 
-	public User getUser() {
-		return user;
+	public boolean isPromoted() {
+		return promoted;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPromoted(boolean promoted) {
+		this.promoted = promoted;
 	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public List<User> getHost() {
+		return host;
+	}
+
+	public void setHost(List<User> host) {
+		this.host = host;
+	}
+
+	public List<Date> getDate() {
+		return date;
+	}
+
+	public void setDate(List<Date> date) {
+		this.date = date;
+	}
+
+//	public User getUser() {
+//		return user;
+//	}
+//
+//	public void setUser(User user) {
+//		this.user = user;
+//	}
 
 	public void setId(long id) {
 		this.id = id;

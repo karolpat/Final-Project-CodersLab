@@ -19,19 +19,9 @@ public class Advert {
 	@ManyToOne
 	private User owner;
 
-	@ManyToOne
-	private User host;
-	
 	@OneToOne
 	private Room room;
 	
-	private boolean availability;
-	
-	private LocalDate start;
-	
-	private LocalDate end;
-	
-	private boolean promoted;
 	
 	//-----------------------------------------
 
@@ -41,13 +31,13 @@ public class Advert {
 		return id;
 	}
 
-	public boolean isPromoted() {
-		return promoted;
-	}
-
-	public void setPromoted(boolean promoted) {
-		this.promoted = promoted;
-	}
+//	public boolean isPromoted() {
+//		return promoted;
+//	}
+//
+//	public void setPromoted(boolean promoted) {
+//		this.promoted = promoted;
+//	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -61,43 +51,33 @@ public class Advert {
 		this.owner = owner;
 	}
 
-	public User getHost() {
-		return host;
-	}
-
-	public void setHost(User host) {
-		this.host = host;
-	}
-
-	public boolean isAvailability() {
-		return availability;
-	}
-
-	public void setAvailability(boolean availability) {
-		this.availability = availability;
-	}
-
-	public LocalDate getStart() {
-		return start;
-	}
-
-	public void setStart(LocalDate start) {
-		this.start = start;
-	}
-
-	public LocalDate getEnd() {
-		return end;
-	}
-
-	public void setEnd(LocalDate end) {
-		this.end = end;
-	}
-
 	@Override
 	public String toString() {
-		return "Advert [id=" + id + ", owner=" + owner + ", host=" + host + ", availability=" + availability
-				+ ", start=" + start + ", end=" + end + "]";
+		return "Advert [id=" + id + ", owner=" + owner + ", room=" + room + "]";
 	}
+
+//	public User getHost() {
+//		return host;
+//	}
+//
+//	public void setHost(User host) {
+//		this.host = host;
+//	}
+//
+//	public boolean isAvailability() {
+//		return availability;
+//	}
+//
+//	public void setAvailability(boolean availability) {
+//		this.availability = availability;
+//	}
+
+
+//	@Override
+//	public String toString() {
+//		return "Advert [id=" + id + ", owner=" + owner + ", host=" + host + ", availability=" + availability
+//				+  "]";
+//	}
 	
 	
 }

@@ -13,8 +13,9 @@
 			<div th:if="${message}">
 				<h2 th:text="${message}">mess</h2>
 			</div>
+			<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 			<img th:src="@{${currUser.avatar}}" alt="User avatar"
-				style="border-radius: 50%; margin-left: auto; margin-right: auto; width: 15%; display: block">
+				style="border-radius: 50%; margin-left: auto; margin-right: auto; width: 15%; display: block"></div>
 		</div>
 		<div class="line">
 			<div align="center">
@@ -38,7 +39,7 @@
 						<div class="icon">
 							<i class="icon-user"></i>
 						</div>
-						<div class="name">
+						<div class="name" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 							<strong class="text-uppercase">First name</strong> <strong
 								class="text-uppercase">Last name</strong> <strong
 								class="text-primary"
@@ -55,7 +56,7 @@
 						<div class="icon">
 							<i class="icon-check"></i>
 						</div>
-						<div class="name">
+						<div class="name" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 							<strong class="text-uppercase" th:text="'Email adress'">Email</strong>
 							<strong class="text-primary" th:text="${currUser.email}">email</strong>
 						</div>
@@ -66,7 +67,7 @@
 						<div class="icon">
 							<i class="icon-check"></i>
 						</div>
-						<div class="name">
+						<div class="name" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 							<strong class="text-uppercase" th:text="'Phone number'">PHone</strong>
 							<strong class="text-primary" th:text="${currUser.phoneNumber}">phone</strong>
 						</div>
@@ -78,7 +79,7 @@
 						<div class="icon">
 							<i class="icon-padnote"></i>
 						</div>
-						<div class="name">
+						<div class="name" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 							<strong class="text-uppercase" th:text="'Active since'">Active
 								since</strong> <strong class="text-primary" th:text="${currUser.created}">date</strong>
 						</div>
@@ -90,7 +91,7 @@
 						<div class="icon">
 							<i class="icon-check"></i>
 						</div>
-						<div class="name">
+						<div class="name"sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 							<strong class="text-uppercase" th:text="'Average rate'">Rate</strong>
 							<strong class="text-primary" th:text="${currUser.rate}">date</strong>
 						</div>
@@ -102,7 +103,7 @@
 						<div class="icon">
 							<i class="icon-bill"></i>
 						</div>
-						<div class="name">
+						<div class="name" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 							<strong class="text-uppercase" th:text="'Address'">Address</strong>
 							<span
 								th:text="${currUser.country != null} ? ${currUser.country} : 'Country'">Country</span>
@@ -118,7 +119,7 @@
 				<!-- Count item widget-->
 			</div>
 		</div>
-		<div>
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
 			<a th:href="@{'/profile/edit'(username=${currUser.username})}"
 				class="btn btn-success"> Edit <span class="fa fa-pencil"></span></a>
 		</div>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
+
 import pl.coderslab.entity.Faq;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.FaqRepo;
@@ -43,8 +46,8 @@ public class HomeController {
 
 	private UserService userService;
 
-//	@Autowired
-//	private StudentRepo stud;
+	// @Autowired
+	// private StudentRepo stud;
 
 	@Autowired
 	private FaqRepo faqRepo;
@@ -100,13 +103,26 @@ public class HomeController {
 			// String avatar = user.getAvatar();
 			user.setAvatar("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
 			userRepo.save(user);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return "redirect:/user/profile";
 		// return "profile";
 	}
+	
+	@GetMapping("/user/add/offer")
+	public String offerForm() {
+		return "offerForm";
+	}
+	
+	@PostMapping("/user/add/oofer")
+	public String offer() {
+		
+		return "redirect:/user/profile";
+	}
+	
+	
 
 	@GetMapping("/profile/edit")
 	public String editForm(Model model) {
@@ -200,16 +216,29 @@ public class HomeController {
 		return "redirect:/";
 	}
 
-//	@RequestMapping("/students")
-//	public String list(ModelMap model, @SortDefault("firstName") Pageable pageable) {
-//		model.addAttribute("studs", stud.findAll(pageable));
-//
-//		return "list";
-//	}
-	
+	// @RequestMapping("/students")
+	// public String list(ModelMap model, @SortDefault("firstName") Pageable
+	// pageable) {
+	// model.addAttribute("studs", stud.findAll(pageable));
+	//
+	// return "list";
+	// }
+
 	@ModelAttribute
 	public void userModer(Model model) {
 		User user = userService.findByUserName(currentUser());
 		model.addAttribute("currUser", user);
+	}
+	
+	@GetMapping("/us")
+	@ResponseBody
+	public String list() {
+		List<User> list = userRepo.findAll();
+		Gson gson = new Gson();
+		
+		String result = gson.toJson(list);
+		
+		return result;
+		
 	}
 }

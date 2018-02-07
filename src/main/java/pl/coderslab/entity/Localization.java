@@ -102,8 +102,7 @@ public class Localization {
 	@Override
 	public String toString() {
 		return "Localization [id=" + id + ", country=" + country + ", city=" + city + ", street=" + street
-				+  ", hotel=" + hotel + ", appartment=" + appartment + ", user="
-				+ user + "]";
+				+  ", hotel=" + hotel + ", appartment=" + appartment + "]";
 	}
 	
 	

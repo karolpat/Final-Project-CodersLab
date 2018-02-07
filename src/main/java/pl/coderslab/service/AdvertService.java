@@ -14,9 +14,5 @@ public interface AdvertService {
 
 	List<Advert> findAllByHostUsername(String username);
 	
-	List<Advert> checkAvailability(LocalDate start, LocalDate end);
 	
-	List<Advert> showAllAvailable();
-	
-	List<Advert> showAllPromoted();
 }
