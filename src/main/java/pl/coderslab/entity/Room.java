@@ -9,47 +9,94 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Room {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
 	@NotBlank
 	private double area;
-	
+
 	@NotBlank
 	private String type;
 	
-	private boolean availability;
-	
+	private String name;
+
+	private boolean availability=true;
+
 	@OneToMany
 	private List<Date> date;
-	
+
 	@ManyToOne
 	private Hotel hotel;
-	
-	@ManyToOne
-	private Appartment appartment;
-	
-	@ManyToOne
-	private User owner;
-	
+
+//	@ManyToOne
+//	@JsonBackReference
+//	private User owner;
+
 	@ManyToMany
+	@JsonBackReference
 	private List<User> host;
-	
+
 	private boolean promoted;
 
-	//------------------------------------------
+	private String description;
+
+	@OneToOne
+	@JsonManagedReference
+	private Image image;
+
+	@OneToOne
+	@JsonManagedReference
+	private Localization localization;
+
+	// ------------------------------------------
 	
 	
-	
+
 	public long getId() {
 		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
+	public Localization getLocalization() {
+		return localization;
+	}
+
+	public void setLocalization(Localization localization) {
+		this.localization = localization;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public boolean isPromoted() {
@@ -60,13 +107,13 @@ public class Room {
 		this.promoted = promoted;
 	}
 
-	public User getOwner() {
-		return owner;
-	}
-
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+//	public User getOwner() {
+//		return owner;
+//	}
+//
+//	public void setOwner(User owner) {
+//		this.owner = owner;
+//	}
 
 	public List<User> getHost() {
 		return host;
@@ -83,14 +130,6 @@ public class Room {
 	public void setDate(List<Date> date) {
 		this.date = date;
 	}
-
-//	public User getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
 
 	public void setId(long id) {
 		this.id = id;
@@ -128,13 +167,11 @@ public class Room {
 		this.hotel = hotel;
 	}
 
-	public Appartment getAppartment() {
-		return appartment;
+	@Override
+	public String toString() {
+		return "Room [id=" + id + ", area=" + area + ", type=" + type + ", availability=" + availability + ", date="
+				+ date + ", hotel=" + hotel + ", host=" + host + ", promoted=" + promoted
+				+ ", description=" + description + ", image=" + image + ", localization=" + localization + "]";
 	}
 
-	public void setAppartment(Appartment appartment) {
-		this.appartment = appartment;
-	}
-	
-	
 }

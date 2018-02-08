@@ -30,17 +30,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 
 import pl.coderslab.entity.Faq;
+import pl.coderslab.entity.Image;
+import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.FaqRepo;
+import pl.coderslab.repo.ImageRepo;
 import pl.coderslab.repo.LocalizationRepo;
 import pl.coderslab.repo.RoleRepo;
+import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.UserService;
 
 @Controller
 public class HomeController {
 
-	private static String UPLOADED_FOLDER = "/home/karolpat/eclipse-workspace/demo/src/main/resources/static/storage/";
+	private static String UPLOADED_FOLDER = "/home/karolpat/eclipse-workspace/demo2/src/main/resources/static/storage/";
 
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
@@ -60,6 +64,12 @@ public class HomeController {
 
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private ImageRepo imageRepo;
+	
+	@Autowired
+	private RoomRepo roomRepo;
 
 	public HomeController(UserService userService) {
 		this.userService = userService;
@@ -75,7 +85,11 @@ public class HomeController {
 	public String profile(Model model) {
 
 		User user = userService.findByUserName(currentUser());
-
+		Image image = imageRepo.findOneByUserId(user.getId());
+		
+		log.info(image.getPath());
+		
+		model.addAttribute("image", image);
 		model.addAttribute("currUser", user);
 		return "profile";
 	}
@@ -100,8 +114,11 @@ public class HomeController {
 			redirectAttributes.addFlashAttribute("message",
 					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
 			User user = userService.findByUserName(currentUser());
-			// String avatar = user.getAvatar();
-			user.setAvatar("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
+			Image image  = imageRepo.findOneByUserId(user.getId());
+			log.info(user.toString());
+			image.setUser(user);
+			image.setPath("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
+			imageRepo.save(image);
 			userRepo.save(user);
 
 		} catch (IOException e) {
@@ -111,12 +128,16 @@ public class HomeController {
 		// return "profile";
 	}
 	
-	@GetMapping("/user/add/offer")
-	public String offerForm() {
+	@GetMapping("/user/offer")
+	public String offerForm(Model model) {
+
+		Room room = new Room();
+		model.addAttribute("room", room);
+		
 		return "offerForm";
 	}
 	
-	@PostMapping("/user/add/oofer")
+	@PostMapping("/user/offer")
 	public String offer() {
 		
 		return "redirect:/user/profile";
@@ -136,7 +157,7 @@ public class HomeController {
 
 	@PostMapping("/profile/edit")
 	public String saveEdit(Model model, String firstName, String lastName, String gender, String country, String city,
-			String street, int phoneNumber, String postalCode) {
+			String street, int phoneNumber) {
 
 		User user = userService.findByUserName(currentUser());
 		user.setFirstName(firstName);
@@ -146,7 +167,6 @@ public class HomeController {
 		user.setCity(city);
 		user.setStreet(street);
 		user.setPhoneNumber(phoneNumber);
-		user.setPostalCode(postalCode);
 		log.info(user.toString());
 		userRepo.save(user);
 
@@ -188,7 +208,7 @@ public class HomeController {
 		} else {
 			log.info(user.toString());
 			user.setCreated(new LocalDate());
-			user.setAvatar("../storage/default.jpg");
+//			user.setAvatar("../storage/default.jpg");
 			userService.saveUser(user);
 			return "redirect:/login";
 		}

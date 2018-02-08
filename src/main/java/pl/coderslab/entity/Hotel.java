@@ -1,18 +1,25 @@
 package pl.coderslab.entity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Hotel {
@@ -25,30 +32,35 @@ public class Hotel {
 	@Size(min = 5, max = 25)
 	private String name;
 
-	private double rate;
+	private double rating;
 
 	@OneToOne
-	@JoinColumn(name="localization_id")
-	private Localization localization;
+	@JoinColumn(name = "localization_id")
+	private Localization address;
 
 	@ManyToOne
-	private User user;
+	@JsonBackReference
+	private User hOwner;
 
 	@OneToMany
-	private List<Room> rooms;
+	@MapKeyColumn(name = "id")
+	private Map<Long, Room> rooms = new HashMap<Long, Room>();
 
-	// ----------------------------------------
+	@JsonManagedReference
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
+	@MapKeyColumn(name = "id")
+	private Map<Long, Comment> comments = new HashMap<Long, Comment>();
+
+	@JsonManagedReference
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
+	@MapKeyColumn(name = "id")
+	private Map<Long, Image> images = new HashMap<Long, Image>();
+	
+	
+	//----------------------------------------
 
 	public long getId() {
 		return id;
-	}
-
-	public List<Room> getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(List<Room> rooms) {
-		this.rooms = rooms;
 	}
 
 	public void setId(long id) {
@@ -63,28 +75,61 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public double getRate() {
-		return rate;
+	public double getRating() {
+		return rating;
 	}
 
-	public void setRate(double rate) {
-		this.rate = rate;
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 
-	public Localization getLocalization() {
-		return localization;
+	public Localization getAddress() {
+		return address;
 	}
 
-	public void setLocalization(Localization localization) {
-		this.localization = localization;
+	public void setAddress(Localization address) {
+		this.address = address;
 	}
 
-	public User getUser() {
-		return user;
+	public User getOwner() {
+		return hOwner;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setOwner(User owner) {
+		this.hOwner = owner;
 	}
 
+	public Map<Long, Room> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Map<Long, Room> rooms) {
+		this.rooms = rooms;
+	}
+
+	public Map<Long, Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Map<Long, Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Map<Long, Image> getImages() {
+		return images;
+	}
+
+	public void setImages(Map<Long, Image> images) {
+		this.images = images;
+	}
+
+	@Override
+	public String toString() {
+		return "Hotel [id=" + id + ", name=" + name + ", rating=" + rating + ", address=" + address + ", owner=" + hOwner
+				+ ", rooms=" + rooms + ", comments=" + comments + ", images=" + images + "]";
+	}
+	
+	
+
+	
 }

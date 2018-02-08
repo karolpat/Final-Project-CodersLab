@@ -15,6 +15,7 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "role_id")
 	private int id;
+	
 	@Column(name = "role")
 	private String name;
 	
@@ -44,7 +45,7 @@ public class Role {
 	
 	@Override
 	public String toString() {
-		return "Role [id=" + id + ", name=" + name + "]";
+		return "Role [id=" + id + ", name=" + name + ", subName=" + subName + "]";
 	}
 
 }

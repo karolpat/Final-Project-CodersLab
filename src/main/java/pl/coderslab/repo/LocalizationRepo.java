@@ -7,5 +7,5 @@ import pl.coderslab.entity.Localization;
 public interface LocalizationRepo extends JpaRepository<Localization, Long> {
 
 	
-	Localization findByUserId(long id);
+//	Localization findByUserId(long id);
 }

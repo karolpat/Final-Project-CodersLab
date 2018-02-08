@@ -49,7 +49,7 @@
 <!-- 					<img src="img/avatar-1.jpg" alt="person" -->
 <!-- 						class="img-fluid rounded-circle"> -->
 	<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
-						<img th:src="@{${currUser.avatar}}" alt="avatar"
+						<img th:src="@{${currUser.image}}" alt="avatar"
 													class="img-fluid rounded-circle"></div>
 <!-- role authentication -->	<h2 class="h5" sec:authentication="name">Anderson Hardy</h2>
 					<span sec:authentication="authorities">Web Developer</span>
@@ -67,7 +67,7 @@
 					<li><a href="/"> <i class="icon-home"></i>Home
 					</a></li>
 					<li><a th:href="@{/user/profile}"> <i class="icon-form"></i>Profile</a>
-					<li><a th:href="@{/user/add/offer}"> <i class="icon-form"></i>Add offer</a>
+					<li><a th:href="@{/user/offer}"> <i class="icon-form"></i>Add offer</a>
 					<li><a href="forms"> <i class="icon-form"></i>Forms
 					</a></li>
 					<li><a href="charts"> <i class="fa fa-bar-chart"></i>Charts

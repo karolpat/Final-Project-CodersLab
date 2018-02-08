@@ -13,8 +13,8 @@
 			<div th:if="${message}">
 				<h2 th:text="${message}">mess</h2>
 			</div>
-			<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
-			<img th:src="@{${currUser.avatar}}" alt="User avatar"
+			<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')" th:if="${image?.path}">
+			<img th:src="@{${image.path}}" alt="User avatar"
 				style="border-radius: 50%; margin-left: auto; margin-right: auto; width: 15%; display: block"></div>
 		</div>
 		<div class="line">
@@ -111,8 +111,7 @@
 								th:text="${currUser.city != null} ? ${currUser.city} : 'City'">City</span>
 							<span
 								th:text="${currUser.street != null}? ${currUser.street} : 'Street'">Street
-								number</span> <span
-								th:text="${currUser.postalCode != null} ? ${currUser.postalCode} : 'Postal code'">postalCode</span>
+								number</span> 
 						</div>
 					</div>
 				</div>

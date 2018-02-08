@@ -9,9 +9,9 @@ import pl.coderslab.entity.Room;
 
 public interface RoomRepo extends JpaRepository<Room, Long> {
 
-	List<Room> findAllByPromoted(boolean promoted);
-
-	List<Room> findAllByOwnerUsername(String username);
-
-	List<Room> findAllByHostUsername(String username);
+//	List<Room> findAllByPromoted(boolean promoted);
+//
+//	List<Room> findAllByOwnerUsername(String username);
+//
+//	List<Room> findAllByHostUsername(String username);
 }

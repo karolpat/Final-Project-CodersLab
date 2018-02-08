@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Localization {
 
@@ -19,55 +21,20 @@ public class Localization {
 	
 	private String street;
 		
-	private String postalCode;
 	
 	@OneToOne
+	@JsonBackReference
 	private Hotel hotel;
 	
 	@OneToOne
-	private Appartment appartment;
+	@JsonBackReference
+	private Room room;
 	
-	@OneToOne
-	private User user;
 	
 	//-------------------------
-	
-	
 
 	public long getId() {
 		return id;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Hotel getHotel() {
-		return hotel;
-	}
-
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
-
-	public Appartment getAppartment() {
-		return appartment;
-	}
-
-	public void setAppartment(Appartment appartment) {
-		this.appartment = appartment;
 	}
 
 	public void setId(long id) {
@@ -98,12 +65,29 @@ public class Localization {
 		this.street = street;
 	}
 
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
 
 	@Override
 	public String toString() {
-		return "Localization [id=" + id + ", country=" + country + ", city=" + city + ", street=" + street
-				+  ", hotel=" + hotel + ", appartment=" + appartment + "]";
+		return "Localization [id=" + id + ", country=" + country + ", city=" + city + ", street=" + street + ", hotel="
+				+ hotel + ", room=" + room + "]";
 	}
 	
+	
+
 	
 }
