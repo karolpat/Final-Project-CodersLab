@@ -80,7 +80,7 @@
 								<div class="date" th:if="${room?.added}">
 									<small th:text="${room.added}">5min ago</small>
 									<div>
-										<a th:href="@{'/profile/edit'(username=${currUser.username})}"
+										<a th:href="@{/profile/edit}"
 											class="btn btn-success"> Book  <span class="fa fa-pencil"></span></a>
 									</div>
 								</div>

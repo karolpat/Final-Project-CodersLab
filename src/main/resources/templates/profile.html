@@ -4,26 +4,27 @@
 	layout:decorator="layout2">
 
 <section layout:fragment="content">
-<!-- 	<div class="dashboard-counts section-padding" sec:authorize="hasRole('ROLE_USER')"> -->
-<!-- 			<div class="container-fluid"> -->
-<!-- 				<div align="center"> -->
-<!-- 					Count item widget -->
-<!-- 					<div class="col-xl-2 col-md-4 col-6"> -->
-<!-- 						<div class="wrapper count-title d-flex"> -->
-<!-- 							<div class="icon"> -->
-<!-- 								<i class="icon-user"></i> -->
-<!-- 							</div> -->
-<!-- 							<div class="name"> -->
-<!-- 								<strong class="text-uppercase" th:text="'Upgrade your account to Owner'">Upgrade</strong><span th:text="'This will allow you to rent your apartment'">Upgrade cd</span> -->
-<!-- 								<div class="count-number"><a th:href="@{'/user/profile/edit'(username=${currUser.username})}" -->
-<!-- 				class="btn btn-success"> Send request<span class="fa fa-pencil"></span></a></div> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-	
+
+	<section class="dashboard-counts section-padding"  sec:authorize="hasRole('ROLE_USER')" th:if="${currUser.ownerReq == false}">
+			<div class="container-fluid">
+				<div align="center">
+					Count item widget
+					<div class="col-xl-2 col-md-4 col-6">
+						<div class="wrapper count-title d-flex">
+							<div class="icon">
+								<i class="icon-user"></i>
+							</div>
+							<div class="name">
+								<strong class="text-uppercase" th:text="'Upgrade your account to Owner'">Upgrade</strong><span th:text="'This will allow you to rent your apartment'">Upgrade cd</span>
+								<div class="count-number"><a th:href="@{'/user/profile/edit'(username=${currUser.username})}"
+				class="btn btn-success"> Send request<span class="fa fa-pencil"></span></a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section><hr>
+<section class="dashboard-counts section-padding">	
 		<div class="card data-usage text-primary"
 			style="margin-bottom: 25px; text-align: center">
 			<h2>Personal details</h2>
@@ -141,5 +142,6 @@
 			<a th:href="@{'/user/profile/edit'(username=${currUser.username})}"
 				class="btn btn-success"> Edit <span class="fa fa-pencil"></span></a>
 		</div>
+		</section>
 </section>
 </html>

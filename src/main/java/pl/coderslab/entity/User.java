@@ -87,13 +87,26 @@ public class User {
 	@JsonManagedReference
 	private Image image;
 	
+	private boolean ownerReq=false;
+	
 	
 //	------------------------------------------------
+	
 	
 	
 
 	public Long getId() {
 		return id;
+	}
+
+
+	public boolean isOwnerReq() {
+		return ownerReq;
+	}
+
+
+	public void setOwnerReq(boolean ownerReq) {
+		this.ownerReq = ownerReq;
 	}
 
 

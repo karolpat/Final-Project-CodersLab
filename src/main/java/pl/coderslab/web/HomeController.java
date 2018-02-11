@@ -258,6 +258,10 @@ public class HomeController {
 		} else {
 			log.info(user.toString());
 			user.setCreated(new LocalDate());
+			Image image = new Image();
+			image.setPath("../storage/default.jpg");
+			imageRepo.saveAndFlush(image);
+			user.setImage(image);
 			userService.saveUser(user);
 			return "redirect:/login";
 
