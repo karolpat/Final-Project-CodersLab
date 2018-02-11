@@ -14,7 +14,7 @@
 				<h2 th:text="${message}">mess</h2>
 			</div>
 			<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')" th:if="${image?.path}">
-			<img th:src="@{${image.path}}" alt="User avatar"
+			<img th:src="@{|${image.path}|}" alt="User avatar"
 				style="border-radius: 50%; margin-left: auto; margin-right: auto; width: 15%; display: block"></div>
 		</div>
 		<div class="line">
@@ -28,7 +28,7 @@
 							<input type="file" th:name="file"><br/>
 							<br/> <input type="submit" value="Submit"/>
 						</form></li>
-				</ul>
+				</ul>			
 			</div>
 			<hr>
 			<div class="row">
@@ -119,7 +119,7 @@
 			</div>
 		</div>
 		<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')">
-			<a th:href="@{'/profile/edit'(username=${currUser.username})}"
+			<a th:href="@{'/user/profile/edit'(username=${currUser.username})}"
 				class="btn btn-success"> Edit <span class="fa fa-pencil"></span></a>
 		</div>
 	</section>

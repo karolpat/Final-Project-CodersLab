@@ -6,11 +6,11 @@
 	<div class="col-lg-12">
 		<div class="card">
 			<div class="card-header d-flex align-items-center">
-				<h4 th:text="'Edit your account'">Edit</h4>
+				<h4 th:text="'Add new room'">Edit</h4>
 			</div>
 			<div class="card-body">
 				<form class="form-horizontal" method="post" th:object="${room}"
-					th:action="@{/profile/edit}">
+					th:action="@{/user/offer}" enctype="multipart/form-data">
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Name</label>
 						<div class="col-sm-10">
@@ -27,55 +27,52 @@
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Area</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" th:field="*{area}" style="width:10%; display:inline-block;" ><p style="display:inline-block;">m<sup>2</sup></p>
+							<input type="number" class="form-control" th:field="*{area}" step="0.5" style="width:10%; display:inline-block;" ><p style="display:inline-block;">m<sup>2</sup></p>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">Price per day</label>
+						<div class="col-sm-10">
+							<input type="number" class="form-control" th:field="*{price}" step="0.5" style="width:10%; display:inline-block;" ><p style="display:inline-block;">$</p>
 						</div>
 					</div>
 					<div class="line"></div>
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Description</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" th:field="*{description}">
+							<textarea rows="3" class="form-control" th:field="*{description}"></textarea>
 						</div>
-					</div>
-					<div class="line"></div>
-					<div class="form-group row">
-						<label class="col-sm-2 form-control-label">Number of rooms</label>
-						<div>
-								<input id="optionsRadios1" type="radio" th:field="${currUser.gender}"
-									value="Male" name="optionsRadios"> <label
-									for="optionsRadios1">Male</label><br>
-							</div>
-							<div>
-								<input id="optionsRadios2" type="radio" th:field="${currUser.gender}" value="Female"
-									name="optionsRadios"> <label for="optionsRadios2">Female</label>
-							</div>
 					</div>
 					<div class="line"></div>
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Country</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" th:field="${currUser.country}"
-								th:placeholder="${currUser.lastName}">
+							<input type="text" class="form-control" th:field="${loc.country}">
 						</div>
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">City</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" th:field="${currUser.city}"
-								th:placeholder="${currUser.city}">
+							<input type="text" class="form-control" th:field="${loc.city}">
 						</div>
 					</div>
-					<div class="line"></div>
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Street</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" th:field="${currUser.street}"
-								th:placeholder="${currUser.street}">
+							<input type="text" class="form-control" th:field="${loc.street}">
+							<small class="text-small text-gray help-block-none" th:text="'Street name and number'">street name, number</small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">Upload image</label>
+						<div class="col-sm-10">
+								<input type="file" th:name="file"><br>
+							<small class="text-small text-gray help-block-none" th:text="'Must be an image format(jpg, jpeg) with max size 2MB'">street name, number</small>
 						</div>
 					</div>
 					<div class="line"></div>
 					<button type="submit" class="btn btn-success">
-										Submit changes <i class="fa fa-pencil"></i>
+										Submit <i class="fa fa-pencil"></i>
 									</button>
 <!-- 					<input type="submit" value="'Submit changes'"><span class="fa fa-pencil"></span> -->
 <!-- 					<a th:href="@{/profile/edit}" class="btn btn-success" > Submit changes <span class="fa fa-pencil"></span></a> -->

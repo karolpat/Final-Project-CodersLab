@@ -2,21 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorator="layout2">
-<style>
-.originalLike {
-	font: bold 11px Arial;
-	text-decoration: none;
-	background-color: #EEEEEE;
-	color: #333333;
-	padding: 2px 6px 2px 6px;
-	border-top: 1px solid #CCCCCC;
-	border-right: 1px solid #333333;
-	border-bottom: 1px solid #333333;
-	border-left: 1px solid #CCCCCC;
-}
-</style>
 <section layout:fragment="content">
-<div class="container">
+	<div class="container">
 		<!-- Daily Feed Widget-->
 		<div id="daily-feeds" class="card updates daily-feeds">
 			<div id="feeds-header"
@@ -40,22 +27,18 @@
 									<div class="content" style="margin-left: 50px">
 										<div class="row">
 
-											<div class="col" th:if="${room?.name}">
+											<div class="col-lg-4" th:if="${room?.name}">
 												<small th:text="'Room name'"></small><strong
 													th:text="${room.name}">name</strong>
 											</div>
 
-											<div class="col" th:if="${room?.area}">
+											<div class="col-lg-4" th:if="${room?.area}">
 												<small th:text="'Room area'"></small><strong
 													th:text="${room.area}">name</strong>
 											</div>
-											<div class="col" th:if="${room?.price}">
+											<div class="col-lg-4" th:if="${room?.price}">
 												<small th:text="'Price per day'"></small><strong
-													th:text="${room.price} + ' $'">name</strong>
-											</div>
-											<div class="col" th:if="${room?.owner}">
-												<small th:text="'Room owner'"></small><strong
-													th:text="${room.owner.lastName} + ' '+${room.owner.firstName}">name</strong>
+													th:text="${room.price}">name</strong>
 											</div>
 										</div>
 										<br>
@@ -81,7 +64,7 @@
 									<small th:text="${room.added}">5min ago</small>
 									<div>
 										<a th:href="@{'/profile/edit'(username=${currUser.username})}"
-											class="btn btn-success"> Book  <span class="fa fa-pencil"></span></a>
+											class="btn btn-success"> Edit <span class="fa fa-pencil"></span></a>
 									</div>
 								</div>
 							</div>
@@ -92,31 +75,6 @@
 			</div>
 		</div>
 		<!-- Daily Feed Widget End-->
-	</div>
-
-	<h2>FAQ section  <i class="fa fa-question-circle-o"></i></h2>
-	<div id="updates-box" role="tabpanel" class="collapse show"
-		th:each="faq: ${faqList}">
-		<ul class="news list-unstyled">
-			<!-- Item-->
-			<li class="d-flex justify-content-between">
-				<div class="left-col d-flex">
-					<div class="icon">
-						<i class="icon-rss-feed" style="margin-right:10px;"></i>
-					</div>
-					<div class="title">
-						<strong th:text="${faq.question}">Question</strong>
-						<p th:text="${faq.answer}">Answer</p>
-					</div>
-				</div>
-				<div class="right-col text-right">
-					<p style="display: inline-block" >Helpful?</p>
-					<a th:href="@{'/like'(id=${faq.id})}" class="btn btn-success" id="like" >Like <i class="fa">&#xf087;</i>
-					</a>
-					<div class="badge badge-info" th:text="${faq.rate}" style="padding: 12px; font-size:15px;"></div>
-				</div>
-			</li>
-		</ul>
 	</div>
 </section>
 </html>
