@@ -31,6 +31,7 @@ public class User {
 	private Long id;
 
 	@Column(nullable = false, unique = true)
+	@NotBlank
 	private String username;
 
 	private String firstName;
@@ -45,6 +46,7 @@ public class User {
 	@NotBlank
 	@Size(min = 7)
 	private String password;
+	
 
 	@Column(nullable = false, unique = true)
 	@NotBlank
@@ -72,9 +74,9 @@ public class User {
 	@JsonManagedReference
 	private List<Room> roomsAsHost;
 
-//	@OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-//	@JsonManagedReference
-//	private List<Room> roomsAsOwner;
+	@OneToMany(mappedBy = "owner")
+	@JsonManagedReference
+	private List<Room> roomsAsOwner;
 	
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="user")
@@ -87,9 +89,20 @@ public class User {
 	
 	
 //	------------------------------------------------
+	
+	
 
 	public Long getId() {
 		return id;
+	}
+
+
+	public List<Room> getRoomsAsOwner() {
+		return roomsAsOwner;
+	}
+
+	public void setRoomsAsOwner(List<Room> roomsAsOwner) {
+		this.roomsAsOwner = roomsAsOwner;
 	}
 
 	public void setId(Long id) {

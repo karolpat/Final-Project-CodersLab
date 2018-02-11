@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +33,7 @@ import com.google.gson.Gson;
 
 import pl.coderslab.entity.Faq;
 import pl.coderslab.entity.Image;
+import pl.coderslab.entity.Localization;
 import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.FaqRepo;
@@ -64,12 +67,13 @@ public class HomeController {
 
 	@Autowired
 	private UserRepo userRepo;
-	
+
 	@Autowired
 	private ImageRepo imageRepo;
-	
+
 	@Autowired
 	private RoomRepo roomRepo;
+
 
 	public HomeController(UserService userService) {
 		this.userService = userService;
@@ -86,9 +90,12 @@ public class HomeController {
 
 		User user = userService.findByUserName(currentUser());
 		Image image = imageRepo.findOneByUserId(user.getId());
-		
-		log.info(image.getPath());
-		
+		List<Room> rooms = roomRepo.findAllByOwnerId(user.getId());
+
+		// log.info(image.getPath());
+		// log.info(rooms.toString());
+
+		model.addAttribute("rooms", rooms);
 		model.addAttribute("image", image);
 		model.addAttribute("currUser", user);
 		return "profile";
@@ -114,7 +121,7 @@ public class HomeController {
 			redirectAttributes.addFlashAttribute("message",
 					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
 			User user = userService.findByUserName(currentUser());
-			Image image  = imageRepo.findOneByUserId(user.getId());
+			Image image = imageRepo.findOneByUserId(user.getId());
 			log.info(user.toString());
 			image.setUser(user);
 			image.setPath("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
@@ -127,25 +134,67 @@ public class HomeController {
 		return "redirect:/user/profile";
 		// return "profile";
 	}
-	
+
 	@GetMapping("/user/offer")
 	public String offerForm(Model model) {
 
 		Room room = new Room();
+		Localization loc = new Localization();
+
+		model.addAttribute("loc", loc);
 		model.addAttribute("room", room);
-		
+
 		return "offerForm";
 	}
-	
+
 	@PostMapping("/user/offer")
-	public String offer() {
-		
+	public String offer(Room room, Localization localization, @RequestParam("file") MultipartFile file,
+			RedirectAttributes redirectAttributes) {
+
+		log.info(localization.getCity());
+		log.info(room.getName());
+
+		if (file.isEmpty()) {
+			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+			return "redirect:/user/offer";
+		}
+
+		try {
+
+			// Get the file and save it somewhere
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename().replaceAll(" ", ""));
+			Files.write(path, bytes);
+
+			redirectAttributes.addFlashAttribute("message",
+					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
+
+			Image image = new Image();
+			imageRepo.saveAndFlush(image);
+
+			roomRepo.saveAndFlush(room);
+
+			image.setPath("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
+			room.setImage(image);
+			User user = userService.findByUserName(currentUser());
+			room.setOwner(user);
+			room.setAdded(LocalDate.now());
+			// roomRepo.saveAndFlush(room);
+			localRepo.saveAndFlush(localization);
+			room.setLocalization(localization);
+
+			localRepo.save(localization);
+			roomRepo.save(room);
+			imageRepo.save(image);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return "redirect:/user/profile";
 	}
-	
-	
 
-	@GetMapping("/profile/edit")
+	@GetMapping("user/profile/edit")
 	public String editForm(Model model) {
 
 		User user = userService.findByUserName(currentUser());
@@ -203,14 +252,15 @@ public class HomeController {
 		if (bresult.hasErrors()) {
 			log.info("błąd" + user.toString());
 			model.addAttribute(user);
+			model.addAttribute("message", bresult.getAllErrors());
 			return "/register";
 
 		} else {
 			log.info(user.toString());
 			user.setCreated(new LocalDate());
-//			user.setAvatar("../storage/default.jpg");
 			userService.saveUser(user);
 			return "redirect:/login";
+
 		}
 	}
 
@@ -223,6 +273,7 @@ public class HomeController {
 	@GetMapping("/")
 	public String index(Model model) {
 		log.info("some log");
+		model.addAttribute("rooms", roomRepo.findAll());
 		model.addAttribute("faqList", faqRepo.findAll());
 		return "index";
 	}
@@ -236,29 +287,34 @@ public class HomeController {
 		return "redirect:/";
 	}
 
-	// @RequestMapping("/students")
-	// public String list(ModelMap model, @SortDefault("firstName") Pageable
-	// pageable) {
-	// model.addAttribute("studs", stud.findAll(pageable));
-	//
-	// return "list";
-	// }
+	@RequestMapping("/user/rooms")
+	public String list(ModelMap model) {
+		User user = userService.findByUserName(currentUser());
+
+		// for(Room r : roomRepo.findAllByOwnerId(user.getId())) {
+		// log.info(r.getImage().getPath());
+		// }
+		model.addAttribute("rooms", roomRepo.findAllByOwnerId(user.getId()));
+		return "roomList";
+	}
 
 	@ModelAttribute
 	public void userModer(Model model) {
 		User user = userService.findByUserName(currentUser());
 		model.addAttribute("currUser", user);
 	}
-	
+
 	@GetMapping("/us")
 	@ResponseBody
 	public String list() {
 		List<User> list = userRepo.findAll();
 		Gson gson = new Gson();
-		
+
 		String result = gson.toJson(list);
-		
+
 		return result;
-		
+
 	}
+
+
 }

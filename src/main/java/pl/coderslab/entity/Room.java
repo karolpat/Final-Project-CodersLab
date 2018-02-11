@@ -2,6 +2,8 @@ package pl.coderslab.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,8 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.joda.time.LocalDate;
+import org.omg.CORBA.CTX_RESTRICT_SCOPE;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -23,15 +26,16 @@ public class Room {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@NotBlank
 	private double area;
+
+	private double price;
 
 	@NotBlank
 	private String type;
-	
+
 	private String name;
 
-	private boolean availability=true;
+	private boolean availability = true;
 
 	@OneToMany
 	private List<Date> date;
@@ -39,19 +43,17 @@ public class Room {
 	@ManyToOne
 	private Hotel hotel;
 
-//	@ManyToOne
-//	@JsonBackReference
-//	private User owner;
+	@ManyToOne
+	private User owner;
 
 	@ManyToMany
-	@JsonBackReference
 	private List<User> host;
 
-	private boolean promoted;
+	private boolean promoted = false;
 
 	private String description;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private Image image;
 
@@ -59,12 +61,51 @@ public class Room {
 	@JsonManagedReference
 	private Localization localization;
 
-	// ------------------------------------------
-	
-	
+	private LocalDate added;
 
+	@Column(columnDefinition = "Decimal(2,1) default 0.0")
+	private double rate = 0;
+
+	// ------------------------------------------
+
+	
+	
+	
+	
 	public long getId() {
 		return id;
+	}
+
+	public double getRate() {
+		return rate;
+	}
+
+	public void setRate(double rate) {
+		this.rate = rate;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public LocalDate getAdded() {
+		return added;
+	}
+
+	public void setAdded(LocalDate added) {
+		this.added = added;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public String getName() {
@@ -107,13 +148,13 @@ public class Room {
 		this.promoted = promoted;
 	}
 
-//	public User getOwner() {
-//		return owner;
-//	}
-//
-//	public void setOwner(User owner) {
-//		this.owner = owner;
-//	}
+	// public User getOwner() {
+	// return owner;
+	// }
+	//
+	// public void setOwner(User owner) {
+	// this.owner = owner;
+	// }
 
 	public List<User> getHost() {
 		return host;
@@ -170,8 +211,8 @@ public class Room {
 	@Override
 	public String toString() {
 		return "Room [id=" + id + ", area=" + area + ", type=" + type + ", availability=" + availability + ", date="
-				+ date + ", hotel=" + hotel + ", host=" + host + ", promoted=" + promoted
-				+ ", description=" + description + ", image=" + image + ", localization=" + localization + "]";
+				+ date + ", hotel=" + hotel + ", host=" + host + ", promoted=" + promoted + ", description="
+				+ description + ", image=" + image + ", localization=" + localization + "]";
 	}
 
 }
