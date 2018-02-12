@@ -52,7 +52,7 @@
 						<img th:src="@{${currUser.image.path}}" alt="avatar"
 													class="img-fluid rounded-circle"></div>
 <!-- role authentication -->	<h2 class="h5" sec:authentication="name">Anderson Hardy</h2>
-					<span th:text="${currUser?.role?.subName} ? 'as ' + ${currUser.role.subName} : 'Anonymous'">Web Developer</span>
+					<span th:text="${currUser?.role} ? 'as ' + ${currUser.role.subName} : 'Anonymous'">Web Developer</span>
 				</div>
 				<!-- Small Brand information, appears on minimized sidebar-->
 				<div class="sidenav-header-logo">

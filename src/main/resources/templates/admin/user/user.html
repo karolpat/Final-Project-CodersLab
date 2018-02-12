@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+	<div class="row">
+		<div class="col">
+			<div class="card" align="center">
+			<div th:if="${info}">
+			<p th:text="${info}"></p></div>
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th>Id</th>
+							<th>Username</th>
+							<th>First name</th>
+							<th>Last name</th>
+							<th>Created</th>
+							<th>Gender</th>
+							<th>Country</th>
+							<th>City</th>
+							<th>Street</th>
+							<th>Phone number</th>
+							<th>Email</th>
+							<th>Role</th>
+							<th>Owner</th>
+						</tr>
+					</thead>
+
+					<tr>
+						<td th:text="${user.id}">Id</td>
+						<td th:text="${user.username}">Username</td>
+						<td th:text="${user.firstName}">Frist name</td>
+						<td th:text="${user.lastName}">Last name</td>
+						<td th:text="${user.created}">Created</td>
+						<td th:text="${user.gender}">Gender</td>
+						<td th:text="${user.country}">Country</td>
+						<td th:text="${user.city}">City</td>
+						<td th:text="${user.street}">Street</td>
+						<td th:text="${user.phoneNumber}">Phone number</td>
+						<td th:text="${user.email}">Email</td>
+						<td th:text="${user.role.subName}">Role</td>
+						<td><ul th:each="r:${rList}">
+								<li><form method="GET"
+										th:action="@{'/admin/user/room/{id}' (id=${r.id})}">
+										<button type="submit" name="submit" th:text="${r.id}"
+											class="nav-link">Accept</button>
+									</form></li>
+							</ul></td>
+
+					</tr>
+					</th:block>
+				</table>
+				<div align="center">
+					<a href="#upload" aria-expanded="false" data-toggle="collapse">
+						<i class="icon-interface-windows"></i>Send message
+					</a>
+					<ul id="upload" class="collapse list-unstyled ">
+						<li><form method="POST" th:action="@{'admin/user/message/{from}/{to}' (from=${user.id},to=${currUser.id})}">
+								<textarea th:name="message" th:value="content" placeholder="Insert message" th:field="${message.content}"></textarea><br /> <br /> <input
+									type="submit" value="Submit" />
+							</form></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+</html>

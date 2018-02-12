@@ -8,18 +8,27 @@
 	<section class="dashboard-counts section-padding"  sec:authorize="hasRole('ROLE_USER')" th:if="${currUser.ownerReq == false}">
 			<div class="container-fluid">
 				<div align="center">
-					<div class="col-xl-2 col-md-4 col-6">
 						<div class="wrapper count-title d-flex">
 							<div class="icon">
 								<i class="icon-user"></i>
 							</div>
-							<div class="name">
+							<div class="row" align="center">
+							<div class="name col">
 								<strong class="text-uppercase" th:text="'Upgrade your account to Owner'">Upgrade</strong><span th:text="'This will allow you to rent your apartment'">Upgrade cd</span>
-								<div class="count-number"><a th:href="@{'/user/profile/requests/{username}' (username=${currUser.username})}"
+								<div class="count-number"><a th:href="@{'/user/profile/requests/upgrade/{username}' (username=${currUser.username})}"
 				class="btn btn-success"> Send request<span class="fa fa-pencil"></span></a></div>
 							</div>
+							
+							<div class="name col">
+								<strong class="text-uppercase" th:text="'Get permision to use your account'">Get enabled</strong><span th:text="'This will allow you to book the apartment or room. Please complete your personal details first.'">Upgrade cd</span>
+								<div class="count-number"><a th:href="@{'/user/profile/requests/enable/{username}' (username=${currUser.username})}"
+				class="btn btn-success"> Send request<span class="fa fa-pencil"></span></a></div>
+							</div>
+							<div class="icon">
+								<i class="icon-bill"></i>
+							</div>
+							</div>
 						</div>
-					</div>
 				</div>
 			</div>
 		</section><hr>
