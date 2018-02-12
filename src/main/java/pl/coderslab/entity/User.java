@@ -53,7 +53,7 @@ public class User {
 	@Size(min = 4, max = 40)
 	private String email;
 
-	private boolean enabled = true;
+	private boolean enabled = false;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_role")
@@ -91,6 +91,8 @@ public class User {
 	
 	private boolean managerReq=false;
 	
+	private boolean enableReq=false;
+	
 	
 //	------------------------------------------------
 	
@@ -100,6 +102,16 @@ public class User {
 
 	public Long getId() {
 		return id;
+	}
+
+
+	public boolean isEnableReq() {
+		return enableReq;
+	}
+
+
+	public void setEnableReq(boolean enableReq) {
+		this.enableReq = enableReq;
 	}
 
 
