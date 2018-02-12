@@ -89,14 +89,27 @@ public class User {
 	
 	private boolean ownerReq=false;
 	
+	private boolean managerReq=false;
+	
 	
 //	------------------------------------------------
+	
 	
 	
 	
 
 	public Long getId() {
 		return id;
+	}
+
+
+	public boolean isManagerReq() {
+		return managerReq;
+	}
+
+
+	public void setManagerReq(boolean managerReq) {
+		this.managerReq = managerReq;
 	}
 
 

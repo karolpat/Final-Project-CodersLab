@@ -9,4 +9,6 @@ import pl.coderslab.entity.Role;
 public interface RoleRepo extends JpaRepository<Role, Long> {
 
 	Role findByName(String name);
+	
+	Role findBySubName(String subname);
 }

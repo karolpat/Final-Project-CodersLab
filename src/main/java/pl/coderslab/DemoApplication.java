@@ -10,7 +10,7 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 		
 //		Currency currency = new Currency();
-		
+//		
 //		currency.getCurrency();
 		
 	}

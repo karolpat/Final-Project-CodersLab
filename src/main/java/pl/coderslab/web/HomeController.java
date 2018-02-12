@@ -121,9 +121,9 @@ public class HomeController {
 			redirectAttributes.addFlashAttribute("message",
 					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
 			User user = userService.findByUserName(currentUser());
-			Image image = imageRepo.findOneByUserId(user.getId());
+			Image image = imageRepo.findOneById(user.getImage().getId());
 			log.info(user.toString());
-			image.setUser(user);
+			log.info(image.toString());
 			image.setPath("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
 			imageRepo.save(image);
 			userRepo.save(user);

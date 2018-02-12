@@ -20,8 +20,7 @@ public class Request {
 	
 	private String description;
 	
-	private boolean checked;
-	
+	private boolean checked=false;
 	//---------------------------------
 
 	public boolean isChecked() {

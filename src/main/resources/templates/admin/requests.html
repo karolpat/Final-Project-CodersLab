@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+
+	guwno
+	<div class="row">
+		<div class="col">
+			<div class="card" align="center">
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th>Id</th>
+							<th>User name and email</th>
+							<th>Description</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<th:block th:each="req,iterStat : ${rList}">
+
+						<tr>
+							<td th:text="${iterStat.count}">Id</td>
+							<td
+								th:text="${req.user.firstName}+' '+${req.user.lastName}+' '+${req.user.email}">User
+								(name, email)</td>
+							<td th:text="${req.description}">description</td>
+
+							<td th:if="${req.user.ownerReq == true}"><form
+									method="POST"
+									th:action="@{'/admin/request/owner/{id}' (id=${req.id})}">
+									<button type="submit" name="submit" value="value"
+										class="link-button">Accept</button>
+								</form></td>
+
+							<td th:if="${req.user.managerReq == true}">
+								<form method="POST"
+									th:action="@{'/admin/request/manager/{id}' (id=${req.id})}">
+									<button type="submit" name="submit" value="value"
+										class="link-button">Accept</button>
+								</form>
+							</td>
+
+						</tr>
+					</th:block>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+</section>
+</html>

@@ -8,5 +8,7 @@ import pl.coderslab.entity.Image;
 public interface ImageRepo extends JpaRepository<Image, Long>{
 	
 	Image findOneByUserId(long id);
+	
+	Image findOneById(long id);
 
 }
