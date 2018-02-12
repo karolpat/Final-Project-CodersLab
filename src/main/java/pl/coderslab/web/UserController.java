@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.coderslab.entity.Request;
 import pl.coderslab.entity.User;
@@ -16,6 +17,8 @@ import pl.coderslab.service.UserService;
 public class UserController {
 	
 	private final String GET_OWNER="I want to become an owner.";
+	private final String GET_ENABLED="I want to get enabled.";
+	private final String WAIT = "Please wait until admin accept your request.";
 	
 	private UserService userService;
 
@@ -29,8 +32,8 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@GetMapping("/user/profile/requests/{username}")
-	public String ownerReq(@PathVariable("username") String username, Model model) {
+	@GetMapping("/user/profile/requests/upgrade/{username}")
+	public String ownerReq(@PathVariable("username") String username, RedirectAttributes redirectAttributes) {
 		
 		User user = userService.findByUserName(username);
 		Request req = new Request();
@@ -39,11 +42,30 @@ public class UserController {
 		req.setUser(user);
 		user.setOwnerReq(true);
 		
-		model.addAttribute("message", "Wait until admin accept your response");
+		redirectAttributes.addFlashAttribute("message", WAIT);
 		
 		reqRepo.save(req);
 		userRepo.save(user);
 		
 		return "redirect:/user/profile";
 	}
+	
+	@GetMapping("/user/profile/requests/enable/{username}")
+	public String enabledReq(@PathVariable("username") String username, RedirectAttributes redirectAttributes) {
+		
+		User user = userService.findByUserName(username);
+		Request req = new Request();
+		
+		req.setDescription(GET_ENABLED);
+		req.setUser(user);
+		user.setEnableReq(true);
+		
+		redirectAttributes.addFlashAttribute("message", WAIT);
+		
+		reqRepo.save(req);
+		userRepo.save(user);
+		
+		return "redirect:/user/profile";
+	}
+	
 }
