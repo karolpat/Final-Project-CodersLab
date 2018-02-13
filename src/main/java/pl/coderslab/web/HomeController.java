@@ -6,22 +6,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,14 +32,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 
+import pl.coderslab.entity.Chat;
 import pl.coderslab.entity.Faq;
 import pl.coderslab.entity.Image;
 import pl.coderslab.entity.Localization;
+import pl.coderslab.entity.Message;
 import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
+import pl.coderslab.repo.ChatRepo;
 import pl.coderslab.repo.FaqRepo;
 import pl.coderslab.repo.ImageRepo;
 import pl.coderslab.repo.LocalizationRepo;
+import pl.coderslab.repo.MessageRepo;
 import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
@@ -74,6 +78,12 @@ public class HomeController {
 
 	@Autowired
 	private RoomRepo roomRepo;
+	
+	@Autowired
+	private ChatRepo chatRepo;
+	
+	@Autowired
+	private MessageRepo messageRepo;
 
 
 	public HomeController(UserService userService) {
@@ -261,6 +271,45 @@ public class HomeController {
 	public void userModer(Model model) {
 		User user = userService.findByUserName(currentUser());
 		model.addAttribute("currUser", user);
+	}
+	
+	@GetMapping("/user/chat")
+	public String chat(Model model) {
+		
+		User user = userService.findByUserName(currentUser());
+		List<Chat> chat = chatRepo.findAllByUserId(user.getId());
+		
+		model.addAttribute("chat", chat);
+		log.info(chatRepo.findAllByUserId(user.getId()).get(0).toString());
+		
+		return "chat";
+	}
+	
+	@GetMapping("/user/messages/{id}")
+	public String messages(Model model, @PathVariable("id") long id) {
+		
+		List<Message> mess = messageRepo.findAllByChatId(id);
+		
+		model.addAttribute("mess", mess);
+		
+		return "messages";
+	}
+	
+	@PostMapping("/user/message/{to}/{chat}")
+	public String reply(HttpServletRequest request, @PathVariable("to") long to, @PathVariable("chat") long chat, @RequestParam("content") String content) {
+		
+		String previous = request.getHeader("Referer");
+		
+		Message message = new Message();
+		message.setChat(chatRepo.findOne(chat));
+		log.info(message.getChat().getId()+"ok");
+		message.setContent(content);
+		message.setCreated(LocalDate.now());
+		message.setSendFrom(userService.findByUserName(currentUser()));
+		message.setSendTo(userRepo.findOne(to));
+		
+		messageRepo.save(message);
+		return "redirect:"+previous;
 	}
 
 	@GetMapping("/us")
