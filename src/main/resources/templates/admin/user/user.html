@@ -42,11 +42,11 @@
 						<td th:text="${user.email}">Email</td>
 						<td th:text="${user.role.subName}">Role</td>
 						<td><ul th:each="r:${rList}">
-								<li><form method="GET"
-										th:action="@{'/admin/user/room/{id}' (id=${r.id})}">
-										<button type="submit" name="submit" th:text="${r.id}"
-											class="nav-link">Accept</button>
-									</form></li>
+<!-- 								<li><form method="GET" -->
+<!-- 										th:action="@{'/admin/user/room/{id}' (id=${r.id})}"> -->
+<!-- 										<button type="submit" name="submit" th:text="${r.id}" -->
+<!-- 											class="nav-link">Accept</button> -->
+<!-- 									</form></li> -->
 							</ul></td>
 
 					</tr>
@@ -57,8 +57,8 @@
 						<i class="icon-interface-windows"></i>Send message
 					</a>
 					<ul id="upload" class="collapse list-unstyled ">
-						<li><form method="POST" th:action="@{'admin/user/message/{from}/{to}' (from=${user.id},to=${currUser.id})}">
-								<textarea th:name="message" th:value="content" placeholder="Insert message" th:field="${message.content}"></textarea><br /> <br /> <input
+						<li><form method="POST" th:action="@{'/admin/message/{to}/{from}' (to=${user.id},from=${currUser.id})}">
+								<textarea th:name="content" th:value="content" placeholder="Insert message" th:field="${message.content}"></textarea><br /> <br /> <input
 									type="submit" value="Submit" />
 							</form></li>
 					</ul>

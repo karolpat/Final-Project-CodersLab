@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+	<!-- <form method="POST" th:action="@{/admin/message/}"> -->
+	<!-- 								<textarea th:name="content" th:value="content" placeholder="Insert message" th:field="${mess.content}"></textarea><br /> <br /> <input -->
+	<!-- 									type="submit" value="Submit" /> -->
+	<!-- 							</form> -->
+	<form method="POST" th:action="@{'/user/message/{to}/{chat}' (to=${mess[0].sendFrom.id},chat=${mess[0].chat.id})}">
+		<textarea th:name="content" th:value="content"
+			placeholder="Insert message"></textarea>
+		<br /> <br /> <input type="submit" value="Submit" />
+	</form>
+
+	<div>
+		<ul th:each="i : ${#numbers.sequence(mess.size() - 1, 0, -1)}">
+			<li>
+				<ul>
+					<li th:text="${mess[i].sendFrom.username}"></li>
+					<li th:text="${mess[i].created}"></li>
+					<li th:text="${mess[i].content}"></li>
+				</ul>
+			</li>
+			<hr>
+		</ul>
+		
+	</div>
+	
+</section>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+
+	<div th:if="${info}">
+		<h2 th:text="${info}">inf</h2></div>
+		
+		<div th:if="${chat != null}">
+		<ul th:each="chat : ${chat}">
+		<li><a th:href="@{'/user/messages/{id}' (id=${chat.id})}"  th:text="${chat.id}"></a></li>
+		</ul>
+		</div>
+		<div th:if="${chat == null}">
+		<h2 th:text="'No current chats'">No current chats</h2>
+		</div>
+		
+</section>
+</html>

@@ -6,8 +6,8 @@
 <section layout:fragment="content">
 
 	<div th:if="${info}">
-	<h2 th:text="${info}">inf</h2>
-	
+		<h2 th:text="${info}">inf</h2>
+
 	</div>
 	<div class="row">
 		<div class="col">
@@ -18,7 +18,7 @@
 							<th>Id</th>
 							<th>User name and email</th>
 							<th>Description</th>
-							<th>Action</th>
+							<th colspan=2 style="align:center">Action</th>
 						</tr>
 					</thead>
 					<th:block th:each="req,iterStat : ${rList}">
@@ -29,84 +29,49 @@
 								th:text="${req.user.firstName}+' '+${req.user.lastName}+' '+${req.user.email}">User
 									(name, email)</a></td>
 							<td th:text="${req.description}">description</td>
-
-							<td th:if="${req.user.ownerReq == true and req.description == 'I want to become an owner.'}"><form method="POST"
+							<div
+								th:if="${req.user.ownerReq == true and req.description == 'I want to become an owner.'}">
+							<td><form method="POST"
 									th:action="@{'/admin/request/owner/{id}' (id=${req.id})}">
 									<button type="submit" name="submit" value="value"
 										class="nav-link">Accept</button>
 								</form></td>
-							<td th:if="${req.user.enableReq == true and req.description == 'I want to get enabled.'}"><form method="POST"
+							<td><form method="POST"
+									th:action="@{'/admin/request/owner/reject/{id}' (id=${req.id})}">
+									<button type="submit" name="submit" value="value"
+										class="nav-link">Reject</button>
+								</form></td>
+							</div>
+							<div
+								th:if="${req.user.enableReq == true and req.description == 'I want to get enabled.'}">
+							<td><form method="POST"
 									th:action="@{'/admin/request/enable/{id}' (id=${req.id})}">
 									<button type="submit" name="submit" value="value"
 										class="nav-link">Accept</button>
 								</form></td>
-
-							<td th:if="${req.user.managerReq == true} and req.description == 'I want to become a manager.'">
+							<td><form method="POST"
+									th:action="@{'/admin/request/enable/reject/{id}' (id=${req.id})}">
+									<button type="submit" name="submit" value="value"
+										class="nav-link">Reject</button>
+								</form></td>
+							</div>
+							<div
+								th:if="${req.user.managerReq == true and req.description == 'I want to become a manager.'}">
+							<td>
 								<form method="POST"
 									th:action="@{'/admin/request/manager/{id}' (id=${req.id})}">
 									<button type="submit" name="submit" value="value"
 										class="nav-link">Accept</button>
 								</form>
 							</td>
+							<td><form method="POST"
+									th:action="@{'/admin/request/manager/reject/{id}' (id=${req.id})}">
+									<button type="submit" name="submit" value="value"
+										class="nav-link">Reject</button>
+								</form></td>
+							</div>
 						</tr>
 					</th:block>
-				</table>
-			</div>
-		</div>
-	</div>
-	<div class="card">
-		<div class="card-header">
-			<h4>Basic Table</h4>
-		</div>
-		<div class="card-body">
-			<div class="table-responsive">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Username</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>Mark</td>
-							<td>Otto</td>
-							<td>@mdo</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-							<td>@fat</td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td>Larry</td>
-							<td><a href="#upload" aria-expanded="false"
-								data-toggle="collapse"> <i class="icon-interface-windows"></i>Change
-									avatar
-							</a>
-								<ul id="upload" class="collapse list-unstyled ">
-									<li><form method="POST" th:action="@{/user/upload}">
-											<input type="file" th:name="file"><br /> <br /> <input
-												type="submit" value="Submit" />
-										</form></li>
-								</ul></td>
-							<td><a href="#upload" aria-expanded="false"
-								data-toggle="collapse"> <i class="icon-interface-windows"></i>Change
-									avatar
-							</a>
-								<ul id="upload" class="collapse list-unstyled ">
-									<li><form method="POST" th:action="@{/user/upload}">
-											<input type="file" th:name="file"><br /> <br /> <input
-												type="submit" value="Submit" />
-										</form></li>
-								</ul></td>
-						</tr>
-					</tbody>
 				</table>
 			</div>
 		</div>

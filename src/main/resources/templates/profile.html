@@ -28,7 +28,7 @@
 							</div>
 							<div class="name col" th:if="${currUser.managerReq == false and currUser.ownerReq == false}">
 								<strong class="text-uppercase" th:text="'Upgrade your account to Hotel Manager'">Upgrade</strong><span th:text="'This will allow you to give offers of your hotel rooms.'">Upgrade cd</span>
-								<div class="count-number"><a th:href="@{'/user/profile/requests/managert/{username}' (username=${currUser.username})}"
+								<div class="count-number"><a th:href="@{'/user/profile/requests/manager/{username}' (username=${currUser.username})}"
 				class="btn btn-success"> Send request<span class="fa fa-pencil"></span></a></div><div class="icon">
 								<i class="icon-bill"></i>
 							</div>
