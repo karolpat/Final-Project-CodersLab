@@ -6,6 +6,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.joda.time.LocalDate;
@@ -17,7 +19,7 @@ public class Message {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL)
 	private User sendTo;
 	
 	@OneToOne
@@ -26,13 +28,42 @@ public class Message {
 	private LocalDate created;
 	
 	private String content;
-
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Chat chat;
+	
 	//----------------------------
-	
-	
-	
+
 	public long getId() {
 		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public User getSendTo() {
+		return sendTo;
+	}
+
+	public void setSendTo(User sendTo) {
+		this.sendTo = sendTo;
+	}
+
+	public User getSendFrom() {
+		return sendFrom;
+	}
+
+	public void setSendFrom(User sendFrom) {
+		this.sendFrom = sendFrom;
+	}
+
+	public LocalDate getCreated() {
+		return created;
+	}
+
+	public void setCreated(LocalDate created) {
+		this.created = created;
 	}
 
 	public String getContent() {
@@ -43,34 +74,14 @@ public class Message {
 		this.content = content;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public Chat getChat() {
+		return chat;
 	}
 
-	public User getAuthor() {
-		return sendTo;
+	public void setChat(Chat chat) {
+		this.chat = chat;
 	}
 
-	public void setAuthor(User author) {
-		this.sendTo = author;
-	}
-
-	public User getReceiver() {
-		return sendFrom;
-	}
-
-	public void setReceiver(User receiver) {
-		this.sendFrom = receiver;
-	}
-
-	public LocalDate getCreated() {
-		return created;
-	}
-
-	public void setCreated(LocalDate created) {
-		this.created = created;
-	}
-	
 	
 	
 }

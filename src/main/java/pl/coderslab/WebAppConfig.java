@@ -3,6 +3,8 @@ package pl.coderslab;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.dialect.springdata.SpringDataDialect;
@@ -19,6 +21,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public SpringDataDialect springDataDialect() {
 		return new SpringDataDialect();
+	}
+	
+	@Bean
+	public SessionRegistry sessionRegistry() {
+	    return new SessionRegistryImpl();
 	}
 	
 }

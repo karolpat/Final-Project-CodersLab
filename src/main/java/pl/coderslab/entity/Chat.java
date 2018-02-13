@@ -23,7 +23,7 @@ public class Chat {
 	@JoinColumn(name="message_id")
 	private List<Message> message;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id")
 	private List<User> user;
 	
