@@ -12,6 +12,7 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -64,7 +65,7 @@ public class HomeController {
 
 	@Autowired
 	private LocalizationRepo localRepo;
-
+ 
 	@Autowired
 	private UserRepo userRepo;
 
@@ -85,57 +86,8 @@ public class HomeController {
 		return authentication.getName();
 	}
 
-	@GetMapping({ "/user/profile", "/manager/profile" })
-	public String profile(Model model) {
 
-		User user = userService.findByUserName(currentUser());
-		Image image = imageRepo.findOneByUserId(user.getId());
-		List<Room> rooms = roomRepo.findAllByOwnerId(user.getId());
-
-		// log.info(image.getPath());
-		// log.info(rooms.toString());
-
-		model.addAttribute("rooms", rooms);
-		model.addAttribute("image", image);
-		model.addAttribute("currUser", user);
-		return "profile";
-	}
-
-	@PostMapping("/user/upload")
-	public String updateAvatar(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-
-		log.info(file.getName());
-		log.info(file.getOriginalFilename());
-		if (file.isEmpty()) {
-			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-			return "redirect:/user/profile";
-		}
-
-		try {
-
-			// Get the file and save it somewhere
-			byte[] bytes = file.getBytes();
-			Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename().replaceAll(" ", ""));
-			Files.write(path, bytes);
-
-			redirectAttributes.addFlashAttribute("message",
-					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
-			User user = userService.findByUserName(currentUser());
-			Image image = imageRepo.findOneById(user.getImage().getId());
-			log.info(user.toString());
-			log.info(image.toString());
-			image.setPath("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
-			imageRepo.save(image);
-			userRepo.save(user);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "redirect:/user/profile";
-		// return "profile";
-	}
-
-	@GetMapping("/user/offer")
+	@GetMapping("/owner/offer")
 	public String offerForm(Model model) {
 
 		Room room = new Room();
@@ -147,7 +99,7 @@ public class HomeController {
 		return "offerForm";
 	}
 
-	@PostMapping("/user/offer")
+	@PostMapping("/owner/offer")
 	public String offer(Room room, Localization localization, @RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
 
@@ -287,11 +239,14 @@ public class HomeController {
 		Faq faq = faqRepo.findOne(id);
 		faq.setRate(faq.getRate() + 1);
 		faqRepo.save(faq);
+		
+		User user= userService.findByUserName(currentUser());
+		log.info(user.getRole().getName());
 
 		return "redirect:/";
 	}
 
-	@RequestMapping("/user/rooms")
+	@RequestMapping("/owner/rooms")
 	public String list(ModelMap model) {
 		User user = userService.findByUserName(currentUser());
 

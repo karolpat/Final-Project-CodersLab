@@ -259,14 +259,6 @@ public class User {
 		this.rate = rate;
 	}
 
-//	public List<Hotel> getHotels() {
-//		return hotels;
-//	}
-//
-//	public void setHotels(List<Hotel> hotels) {
-//		this.hotels = hotels;
-//	}
-
 	public List<Room> getRoomsAsHost() {
 		return roomsAsHost;
 	}
@@ -274,14 +266,6 @@ public class User {
 	public void setRoomsAsHost(List<Room> roomsAsHost) {
 		this.roomsAsHost = roomsAsHost;
 	}
-
-//	public List<Room> getRoomsAsOwner() {
-//		return roomsAsOwner;
-//	}
-//
-//	public void setRoomsAsOwner(List<Room> roomsAsOwner) {
-//		this.roomsAsOwner = roomsAsOwner;
-//	}
 
 	public Map<Long, Comment> getComments() {
 		return comments;
@@ -307,14 +291,5 @@ public class User {
 				+ ", enabled=" + enabled + ", role=" + role + ", rate=" + rate +  ", roomsAsHost="
 				+ roomsAsHost + ", comments=" + comments + ", image=" + image + "]";
 	}
-
-	// @OneToOne
-	// @JoinColumn(name="localization_id")
-	// private Localization localization;
-
-	// -
-
-	
-	
 
 }

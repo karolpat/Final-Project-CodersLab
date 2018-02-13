@@ -67,8 +67,8 @@
 					<li><a href="/"> <i class="icon-home"></i>Home
 					</a></li>
 					<li><a th:href="@{/user/profile}"> <i class="icon-form"></i>Profile</a>
-					<li><a th:href="@{/user/offer}"> <i class="icon-form"></i>Add offer</a>
-					<li><a th:href="@{/user/rooms}"> <i class="icon-form"></i>Show my offers</a>
+					<li><a th:href="@{/owner/offer}"> <i class="icon-form"></i>Add offer</a>
+					<li><a th:href="@{/owner/rooms}"> <i class="icon-form"></i>Show my offers</a>
 					<li><a href="forms"> <i class="icon-form"></i>Forms
 					</a></li>
 					<li><a href="charts"> <i class="fa fa-bar-chart"></i>Charts
@@ -220,7 +220,7 @@
 										</strong></a></li>
 								</ul></li>
 							<li class="nav-item">
-							<li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')"><form th:action="@{/logout}"
+							<li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER', 'ROLE_OWNER')"><form th:action="@{/logout}"
 									method="post">
 									<button type="submit" class="nav-link logout"
 										style="color: white; background-color: #393836; margin-left: 5px;" class="logout">

@@ -30,18 +30,18 @@
 									(name, email)</a></td>
 							<td th:text="${req.description}">description</td>
 
-							<td th:if="${req.user.ownerReq == true}"><form method="POST"
+							<td th:if="${req.user.ownerReq == true and req.description == 'I want to become an owner.'}"><form method="POST"
 									th:action="@{'/admin/request/owner/{id}' (id=${req.id})}">
 									<button type="submit" name="submit" value="value"
 										class="nav-link">Accept</button>
 								</form></td>
-							<td th:if="${req.user.enableReq == true}"><form method="POST"
+							<td th:if="${req.user.enableReq == true and req.description == 'I want to get enabled.'}"><form method="POST"
 									th:action="@{'/admin/request/enable/{id}' (id=${req.id})}">
 									<button type="submit" name="submit" value="value"
 										class="nav-link">Accept</button>
 								</form></td>
 
-							<td th:if="${req.user.managerReq == true}">
+							<td th:if="${req.user.managerReq == true} and req.description == 'I want to become a manager.'">
 								<form method="POST"
 									th:action="@{'/admin/request/manager/{id}' (id=${req.id})}">
 									<button type="submit" name="submit" value="value"
