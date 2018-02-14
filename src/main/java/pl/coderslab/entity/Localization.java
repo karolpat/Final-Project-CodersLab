@@ -30,7 +30,15 @@ public class Localization {
 	@JsonBackReference
 	private Room room;
 	
-	
+	public Localization() {	}
+
+	public Localization(String country, String city, String street) {
+		this.country = country;
+		this.city = city;
+		this.street = street;
+//		this.hotel = hotel;
+	}
+
 	//-------------------------
 
 	public long getId() {
