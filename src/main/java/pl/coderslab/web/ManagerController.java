@@ -2,6 +2,7 @@ package pl.coderslab.web;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,12 +128,15 @@ public class ManagerController {
 	public String addRoomHotel(@PathVariable("id") long id, Model model, Room room, BindingResult bresult) {
 		
 		Hotel hotel = hotelRepo.findOne(id);
+		Room r = room;
 		
 		if(!bresult.hasErrors()) {
-			
-			room.setLocalization(hotel.getAddress());
-			room.setHotel(hotel);
-			roomRepo.save(room);			
+			r.setId(0);
+			r.setLocalization(hotel.getAddress());
+			r.setHotel(hotel);
+			r.setAdded(LocalDate.now());
+			log.info("git");
+			roomRepo.save(r);			
 			return "redirect:/manager/hotel/"+id;
 		}else {
 			log.info("lipa");

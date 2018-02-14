@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -329,6 +330,58 @@ public class HomeController {
 		model.addAttribute("room", roomRepo.findOne(id));
 		
 		return "promoteForm";
+	}
+	
+	@GetMapping("/send/{to}")
+	public String sendForm(@PathVariable("to") long to, Model model) {
+		
+		User receiver = userRepo.findOne(to);
+		model.addAttribute("user", receiver);
+		
+		return "sendForm";
+	}
+	
+	@PostMapping("/send/message/{to}/{from}")
+	public String sendMessage(@PathVariable("from") long from, @PathVariable("to") long to, @RequestParam("content") String content, RedirectAttributes redirectAttributes) {
+		
+		User author = userRepo.findOne(from);
+		User receiver = userRepo.findOne(to);
+		
+		List<User> chatUserList = new ArrayList<User>();
+		chatUserList.add(author);
+		chatUserList.add(receiver);
+		
+		Chat chat = new Chat();
+		chatRepo.saveAndFlush(chat);
+//		chatRepo.saveAndFlush(chat);
+		
+		chat.setUser(chatUserList);
+		
+		Message mess = new Message();
+		mess.setContent(content);
+		mess.setSendFrom(author);
+		mess.setSendTo(receiver);
+		mess.setCreated(LocalDate.now());
+		mess.setChat(chat);
+		messageRepo.saveAndFlush(mess);
+		
+		List<Message> messList;
+		
+		if(chat.getMessage()==null) {
+			messList = new ArrayList<>();
+		}else {
+			messList = chat.getMessage();
+		}
+		messList.add(mess);
+		chat.setMessage(messList);
+		log.info(mess.getContent());
+		chatRepo.save(chat);
+		
+		
+		redirectAttributes.addFlashAttribute("info",
+				"Message to " + receiver.getUsername() + " sent.");
+
+		return "redirect:/admin/users";
 	}
 	
 	@ModelAttribute

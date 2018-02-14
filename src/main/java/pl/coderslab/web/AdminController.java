@@ -270,5 +270,14 @@ public class AdminController {
 		User user = userServ.findByUserName(currentUser());
 		model.addAttribute("currUser", user);
 	}
+	
+
+	@GetMapping("/admin/users")
+	public String showUsers(Model model) {
+	
+		model.addAttribute("users", userRepo.findAll());
+		return "/admin/users";
+	}
+	
 
 }
