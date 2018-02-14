@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+
+	<div class="row">
+		<div class="col">
+							<div class="name" align="center">
+								<strong class="text-uppercase" th:text="'Add new room'">Upgrade</strong><br><span th:text="'Have a room in this hotel not listed below? Add then!'">Upgrade cd</span>
+								<div class="count-number"><a th:href="@{'/manager/room/add/{id}' (id=${hotel.id})}"
+				class="btn btn-success"> Go to room form<span class="fa fa-pencil"></span></a></div><div class="icon">
+								<i class="icon-user"></i>
+							</div>
+							</div><hr>
+			<div class="card" align="center">
+				<div th:if="${info}">
+					<p th:text="${info}"></p>
+				</div>
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th>Name</th>
+							<th>Country</th>
+							<th>City</th>
+							<th>Street</th>
+							<th>Rating</th>
+							<th>Standard</th>
+							<th>Rooms</th>
+						</tr>
+					</thead>
+					<th:block>
+						<tr>
+							<td th:text="${hotel.name}"> Username</td>
+							<td th:text="${hotel.address.country}">Frist name</td>
+							<td th:text="${hotel.address.city}">Last name</td>
+							<td th:text="${hotel.address.street}">Created</td>
+							<td th:text="${hotel.rating}">Country</td>
+							<td th:text="${hotel.standard}">Rating</td>
+							<td><ul th:each="room : ${rList}"><li><a th:href="@{'/manager/show/room/{id}' (id=${room.id})}" th:text="${room.name}">name</a></li></ul></td>
+						</tr>
+					</th:block>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+</html>

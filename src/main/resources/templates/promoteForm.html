@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+
+	<div class="row">
+		<div class="col">
+			<div class="card" align="center">
+				<div th:if="${info}">
+					<p th:text="${info}"></p>
+				</div>
+				<div class="name" align="center">
+				<strong class="text-uppercase" th:text="'Want to have your room always on top?'">Upgrade</strong><br>
+				<span th:text="'Just 1.500 $ per week.'">Upgrade
+					cd</span>
+				<div class="count-number">
+					<a
+						th:href="@{'/room/promote/{id}' (id=${room.id})}"
+						class="btn btn-success"> Promote this room<span
+						class="fa fa-pencil"></span></a>
+				</div>
+				<div class="icon">
+					<i class="icon-user"></i>
+				</div>
+			</div>
+			<hr>
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Country</th>
+							<th>City</th>
+							<th>Street</th>
+							<th>Rating</th>
+							<th>Price</th>
+							<th>Area</th>
+							<th>Promoted</th>
+						</tr>
+					</thead>
+					<th:block>
+						<tr>
+							<td th:text="${room.name}"> Username</td>
+							<td th:text="${room.type}"> Type</td>
+							<td th:text="${room.localization.country}">Frist name</td>
+							<td th:text="${room.localization.city}">Last name</td>
+							<td th:text="${room.localization.street}">Created</td>
+							<td th:text="${room.rate}">Rating</td>
+							<td th:text="${room.price}">Price</td>
+							<td th:text="${room.area}">Area</td>
+							<td th:text="${room.promoted}">Promoted</td>
+							<td><ul th:each="room : ${rList}"><li><a th:href="@{'/manager/show/room/{id}' (id=${room.id})}" th:text="${room.name}">name</a></li></ul></td>
+						</tr>
+					</th:block>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+</html>
