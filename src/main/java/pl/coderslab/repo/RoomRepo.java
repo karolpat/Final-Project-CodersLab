@@ -16,4 +16,6 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
 //	List<Room> findAllByHostUsername(String username);
 	
 	List<Room> findAllByOwnerId(long id);
+	
+	List<Room>	findAllByHotelId(long id);
 }
