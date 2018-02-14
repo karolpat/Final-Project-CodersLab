@@ -65,6 +65,8 @@ public class Room {
 
 	@Column(columnDefinition = "Decimal(2,1) default 0.0")
 	private double rate = 0;
+	
+	private int capacity;
 
 	// ------------------------------------------
 
@@ -74,6 +76,14 @@ public class Room {
 	
 	public long getId() {
 		return id;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 
 	public double getRate() {
