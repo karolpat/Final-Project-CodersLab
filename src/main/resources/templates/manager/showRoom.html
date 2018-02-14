@@ -37,6 +37,7 @@
 							<th>Rating</th>
 							<th>Price</th>
 							<th>Area</th>
+							<th>Capacity</th>
 							<th>Promoted</th>
 						</tr>
 					</thead>
@@ -50,6 +51,7 @@
 							<td th:text="${room.rate}">Rating</td>
 							<td th:text="${room.price}">Price</td>
 							<td th:text="${room.area}">Area</td>
+							<td th:text="${room.capacity}">Capacity</td>
 							<td th:text="${room.promoted}">Promoted</td>
 							<td><ul th:each="room : ${rList}"><li><a th:href="@{'/manager/show/room/{id}' (id=${room.id})}" th:text="${room.name}">name</a></li></ul></td>
 						</tr>

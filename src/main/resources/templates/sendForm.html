@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+	<div align="center">
+		<a href="#upload" aria-expanded="false" data-toggle="collapse"> <i
+			class="icon-interface-windows"></i>Send message
+		</a>
+		<ul id="upload" class="collapse list-unstyled ">
+			<li><form method="POST"
+					th:action="@{'/send/message/{to}/{from}' (to=${user.id},from=${currUser.id})}">
+					<textarea th:name="content" th:value="content"
+						placeholder="Insert message"></textarea>
+					<br /> <br /> <input type="submit" value="Submit" />
+				</form></li>
+		</ul>
+	</div>
+
+</section>
+</html>
