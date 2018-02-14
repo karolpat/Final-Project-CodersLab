@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+
+<section layout:fragment="content">
+
+	<div th:if="${info}">
+		<h2 th:text="${info}">inf</h2>
+
+	</div>
+	<div class="row">
+		<div class="col">
+			<div class="card" align="center">
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th>Id</th>
+							<th>Username and email</th>
+
+							<th>Role</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<th:block th:each="user,iterStat : ${users}">
+
+						<tr>
+							<td th:text="${iterStat.count}">Id</td>
+							<td th:text="${user.username}+' '+${user.email}">User (name,
+								email)</td>
+							<td th:if="${user?.role}" th:text="${user.role.name}">User
+								(name, email)</td>
+							<td><a
+								th:href="@{'/send/{id}' (id=${user.id},from=${currUser.id})}"
+								th:text="'Send message'"></a></td>
+						</tr>
+					</th:block>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
+</html>
