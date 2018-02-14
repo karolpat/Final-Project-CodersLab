@@ -48,6 +48,7 @@ import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.UserService;
+import pl.coderslab.util.Currency;
 
 @Controller
 public class HomeController {
@@ -237,10 +238,13 @@ public class HomeController {
 	}
 
 	@GetMapping("/")
-	public String index(Model model) {
+	public String index(Model model) throws Exception {
 		log.info("some log");
 		model.addAttribute("rooms", roomRepo.findAll());
 		model.addAttribute("faqList", faqRepo.findAll());
+		Currency currency = new Currency();
+		
+		currency.getCurrency();
 		return "index";
 	}
 
@@ -267,11 +271,6 @@ public class HomeController {
 		return "roomList";
 	}
 
-	@ModelAttribute
-	public void userModer(Model model) {
-		User user = userService.findByUserName(currentUser());
-		model.addAttribute("currUser", user);
-	}
 	
 	@GetMapping("/user/chat")
 	public String chat(Model model) {
@@ -323,6 +322,19 @@ public class HomeController {
 		return result;
 
 	}
-
+	
+	@GetMapping("/room/promote/{id}")
+	public String promoteForm(@PathVariable("id") long id, Model model) {
+		
+		model.addAttribute("room", roomRepo.findOne(id));
+		
+		return "promoteForm";
+	}
+	
+	@ModelAttribute
+	public void userModer(Model model) {
+		User user = userService.findByUserName(currentUser());
+		model.addAttribute("currUser", user);
+	}
 
 }
