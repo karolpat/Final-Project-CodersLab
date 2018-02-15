@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Currency {
 
-	public String[] getCurrency() throws Exception {
+	public List<Double> getCurrency() throws Exception {
 
 		String sURL = "http://api.nbp.pl/api/exchangerates/tables/A?format=json";
 		URL url = new URL(sURL);
@@ -36,10 +37,14 @@ public class Currency {
 			currency[4] = split[80];
 			currency[5] = split[82];
 		}
-
+		
+		List<Double> currencies = new ArrayList<>();
+		currencies.add(Double.parseDouble(currency[1]));
+		currencies.add(Double.parseDouble(currency[3]));
+		currencies.add(Double.parseDouble(currency[5]));
 		System.out.println(Double.parseDouble(currency[1])+ " <-usd, eur-> " + Double.parseDouble(currency[3]) + " gbp-> " + Double.parseDouble(currency[5]));
 
-		return currency;
+		return currencies;
 	}
 
 }

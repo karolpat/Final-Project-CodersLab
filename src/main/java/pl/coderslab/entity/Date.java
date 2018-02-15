@@ -1,5 +1,6 @@
 package pl.coderslab.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,8 +19,10 @@ public class Date {
 	@ManyToOne
 	private Room room;
 	
+//	@Column(columnDefinition = "DATE")
 	private LocalDate start;
 	
+//	@Column(columnDefinition = "DATE")
 	private LocalDate end;
 	
 	//======================

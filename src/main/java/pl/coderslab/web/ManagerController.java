@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.coderslab.entity.Hotel;
+import pl.coderslab.entity.Image;
 import pl.coderslab.entity.Localization;
 import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.HotelRepo;
+import pl.coderslab.repo.ImageRepo;
 import pl.coderslab.repo.LocalizationRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
@@ -43,6 +45,9 @@ public class ManagerController {
 	
 	@Autowired
 	private RoomRepo roomRepo;
+	
+	@Autowired
+	private ImageRepo imageRepo;
 	
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
@@ -84,6 +89,10 @@ public class ManagerController {
 		if(!bresult.hasErrors()) {
 			hotel.sethOwner(user);
 			localizationRepo.saveAndFlush(localization);
+			Image image = new Image();
+			image.setPath("../storage/hotel.png");
+			imageRepo.saveAndFlush(image);
+			hotel.setImages(image);
 			hotel.setAddress(localization);
 			hotelRepo.save(hotel);
 			localization.setHotel(hotel);
@@ -129,12 +138,16 @@ public class ManagerController {
 		
 		Hotel hotel = hotelRepo.findOne(id);
 		Room r = room;
+		Image image = new Image();
+		image.setPath("../storage/room.png");
+		imageRepo.saveAndFlush(image);
 		
 		if(!bresult.hasErrors()) {
 			r.setId(0);
 			r.setLocalization(hotel.getAddress());
 			r.setHotel(hotel);
 			r.setAdded(LocalDate.now());
+			r.setImage(image);
 			log.info("git");
 			roomRepo.save(r);			
 			return "redirect:/manager/hotel/"+id;

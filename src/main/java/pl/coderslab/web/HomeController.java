@@ -191,7 +191,7 @@ public class HomeController {
 		return "charts";
 	}
 
-	@RequestMapping("/*/forms")
+	@RequestMapping("/forms")
 	public String forms() {
 		return "forms";
 	}

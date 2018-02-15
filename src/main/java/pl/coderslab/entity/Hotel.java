@@ -30,7 +30,6 @@ public class Hotel {
 	private long id;
 
 	@NotBlank
-	@Size(min = 5, max = 25)
 	private String name;
 
 	private double rating;
@@ -57,9 +56,8 @@ public class Hotel {
 	private Map<Long, Comment> comments = new HashMap<Long, Comment>();
 
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
-	@MapKeyColumn(name = "id")
-	private Map<Long, Image> images = new HashMap<Long, Image>();
+	@OneToOne
+	private Image images;
 	
 	
 	//----------------------------------------
@@ -138,11 +136,12 @@ public class Hotel {
 		this.comments = comments;
 	}
 
-	public Map<Long, Image> getImages() {
+
+	public Image getImages() {
 		return images;
 	}
 
-	public void setImages(Map<Long, Image> images) {
+	public void setImages(Image images) {
 		this.images = images;
 	}
 

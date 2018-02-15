@@ -1,8 +1,6 @@
 package pl.coderslab.entity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
@@ -22,6 +19,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "users")
@@ -46,7 +44,6 @@ public class User {
 	@NotBlank
 	@Size(min = 7)
 	private String password;
-	
 
 	@Column(nullable = false, unique = true)
 	@NotBlank
@@ -57,83 +54,72 @@ public class User {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_role")
+	@JsonIgnore
 	private Role role;
 
 	@Column(columnDefinition = "Decimal(2,1) default 0.0")
 	private double rate = 0;
 
-//	@OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-//	@JsonManagedReference
-//	private List<Appartment> asOwner;
+	// @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+	// @JsonManagedReference
+	// private List<Appartment> asOwner;
 
-//	@OneToMany(mappedBy="hOwner", fetch=FetchType.EAGER)
-//	@JsonManagedReference
-//	private List<Hotel> hotels;
+	// @OneToMany(mappedBy="hOwner", fetch=FetchType.EAGER)
+	// @JsonManagedReference
+	// private List<Hotel> hotels;
 
 	@ManyToMany(mappedBy = "host", fetch = FetchType.EAGER)
-	@JsonManagedReference
+	@JsonIgnore
 	private List<Room> roomsAsHost;
 
 	@OneToMany(mappedBy = "owner")
-	@JsonManagedReference
+	@JsonIgnore
 	private List<Room> roomsAsOwner;
-	
-	@JsonManagedReference
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="user")
-	@MapKeyColumn(name="id")
-    private Map<Long, Comment> comments = new HashMap<Long, Comment>();
-	
+
+	// @JsonManagedReference
+	// @OneToMany(fetch = FetchType.EAGER, mappedBy="user")
+	// @MapKeyColumn(name="id")
+	// private Map<Long, Comment> comments = new HashMap<Long, Comment>();
+
 	@OneToOne
-	@JsonManagedReference
+	@JsonIgnore
 	private Image image;
-	
-	private boolean ownerReq=false;
-	
-	private boolean managerReq=false;
-	
-	private boolean enableReq=false;
-	
-	
-//	------------------------------------------------
-	
-	
-	
-	
+
+	private boolean ownerReq = false;
+
+	private boolean managerReq = false;
+
+	private boolean enableReq = false;
+
+	// ------------------------------------------------
 
 	public Long getId() {
 		return id;
 	}
 
-
 	public boolean isEnableReq() {
 		return enableReq;
 	}
-
 
 	public void setEnableReq(boolean enableReq) {
 		this.enableReq = enableReq;
 	}
 
-
 	public boolean isManagerReq() {
 		return managerReq;
 	}
-
 
 	public void setManagerReq(boolean managerReq) {
 		this.managerReq = managerReq;
 	}
 
-
 	public boolean isOwnerReq() {
 		return ownerReq;
 	}
 
-
 	public void setOwnerReq(boolean ownerReq) {
 		this.ownerReq = ownerReq;
 	}
-
 
 	public List<Room> getRoomsAsOwner() {
 		return roomsAsOwner;
@@ -267,13 +253,13 @@ public class User {
 		this.roomsAsHost = roomsAsHost;
 	}
 
-	public Map<Long, Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(Map<Long, Comment> comments) {
-		this.comments = comments;
-	}
+	// public Map<Long, Comment> getComments() {
+	// return comments;
+	// }
+	//
+	// public void setComments(Map<Long, Comment> comments) {
+	// this.comments = comments;
+	// }
 
 	public Image getImage() {
 		return image;
@@ -288,8 +274,8 @@ public class User {
 		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", created=" + created + ", gender=" + gender + ", country=" + country + ", city=" + city
 				+ ", street=" + street + ", phoneNumber=" + phoneNumber + ", password=" + password + ", email=" + email
-				+ ", enabled=" + enabled + ", role=" + role + ", rate=" + rate +  ", roomsAsHost="
-				+ roomsAsHost + ", comments=" + comments + ", image=" + image + "]";
+				+ ", enabled=" + enabled + ", role=" + role + ", rate=" + rate + ", roomsAsHost=" + roomsAsHost
+				+ ", image=" + image + "]";
 	}
 
 }

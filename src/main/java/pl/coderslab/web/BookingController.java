@@ -14,12 +14,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import pl.coderslab.entity.Localization;
+import pl.coderslab.entity.Date;
 import pl.coderslab.entity.Room;
+import pl.coderslab.entity.User;
 import pl.coderslab.repo.ChatRepo;
 import pl.coderslab.repo.DateRepo;
 import pl.coderslab.repo.FaqRepo;
@@ -30,6 +31,7 @@ import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.UserService;
+import pl.coderslab.util.Currency;
 
 @Controller
 public class BookingController {
@@ -93,10 +95,10 @@ public class BookingController {
 		return "/book/bookForm";
 	}
 
-	@PostMapping("/book")
+	@PostMapping("/book/search")
 	public String test(@RequestParam("capacity") int capacity, @RequestParam("city") String city,
 			@RequestParam("from") String from, @RequestParam("to") String to, Model model) {
-
+log.info("jest");
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 		LocalDate startDate = dtf.parseLocalDate(from);
 		LocalDate endDate = dtf.parseLocalDate(to);
@@ -109,34 +111,101 @@ public class BookingController {
 		List<Room> byLocal = roomRepo.findAllByLocalizationCity(city);
 		List<Room> byHotel = roomRepo.findAllByHotelAddressCity(city);
 		byLocal.addAll(byHotel);
-
-		List<Room> toShow = new ArrayList<>();
-		for (Room r : byLocal) {
-
-			LocalDate[] starts = dateRepo.findAllStart(r.getId());
-			LocalDate[] ends = dateRepo.findAllEnd(r.getId());
-
-			if (starts == null && ends == null) {
-				toShow.add(r);
-				
-			}else if(starts != null && ends != null) {
-				for(int i=0; i<starts.length; i++) {
-					if(startDate.isBefore(starts[i]) && endDate.isBefore(starts[i])) {
-						if(startDate.isAfter(ends[i-1])) {
-							r.setAvailability(true);
-							toShow.add(r);
-						}else {
-							r.setAvailability(false);
-						}
-					}else {
-						r.setAvailability(false);
-					}
-				}
+		List<Room> tmp = new ArrayList<>();
+		for(Room r:byLocal) {
+			if(!tmp.contains(r) && r.getCapacity()>=capacity) {
+				tmp.add(r);
 			}
 		}
+
+		List<Room> toShow = new ArrayList<>();
+		for (Room r : tmp) {
+			log.info(r.getId()+" ");
+//			String[] starts = dateRepo.findAllStart(r.getId());
+//			String[] ends = dateRepo.findAllEnd(r.getId());
+//			Date[] starts = dateRepo.findAllStart(r.getId());
+//			Date[] ends = dateRepo.findAllEnd(r.getId());
+			
+			Date[] dates = dateRepo.findAllByRoomId(r.getId());
+			log.info(dates.length+" ");
+
+			if (dates.length==0) {
+				toShow.add(r);
+				log.info("tu");
+				
+			}else if(dates.length > 0) {
+				for(int i=0; i<dates.length; i++) {
+					log.info("tutaj");
+//					LocalDate str = (starts[i]);
+//					LocalDate str1 = dtf.parseLocalDate(ends[i]);
+					if(startDate.isAfter(dates[i].getEnd()) && i==dates.length-1)  {
+						log.info("if1");
+							toShow.add(r);
+						}else if(startDate.isAfter(dates[i].getEnd()) && endDate.isBefore(dates[i+1].getStart())){
+							toShow.add(r);
+						}
+					}
+				}
+			
+		}
+		model.addAttribute("city", city);
+		model.addAttribute("from", from);
+		model.addAttribute("to", to);
+		model.addAttribute("capacity", capacity);
 		model.addAttribute("rooms", toShow);
 
-		return "index";
+		return "/book/search";
 
+	}
+	
+	@GetMapping("/book/confirm/{id}/{from}/{to}")
+	public String confirmBooking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to, Model model) throws Exception {
+		
+		Currency currency = new Currency();
+		List<Double> currencies = currency.getCurrency();
+		
+		Room room = roomRepo.findOne(id);
+		double price = room.getPrice();
+		double eur = currencies.get(1)/price;
+		double gbp = currencies.get(2)/price;
+		
+		model.addAttribute("eur", eur);
+		model.addAttribute("gbp", gbp);
+		model.addAttribute("price", price);
+		model.addAttribute("from", from);
+		model.addAttribute("to", to);
+		model.addAttribute("room", room);
+		
+		
+		return "/book/confirmation";
+	}
+	
+	@PostMapping("/book/confirm/{id}/{from}/{to}")
+	public String booking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to) {
+		
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+		LocalDate startDate = dtf.parseLocalDate(from);
+		LocalDate endDate = dtf.parseLocalDate(to);
+		
+		Room room = roomRepo.findOne(id);
+		Date date = new Date();
+		User user = userService.findByUserName(currentUser());
+		
+		date.setStart(startDate);
+		date.setEnd(endDate);
+		date.setRoom(roomRepo.findOne(id));
+		dateRepo.save(date);
+		
+		List<User> hosts = room.getHost();
+		hosts.add(user);
+		roomRepo.save(room);
+		
+		List<Room> asHost = user.getRoomsAsHost();
+		asHost.add(room);
+		userRepo.save(user);
+		
+		log.info("success");
+		
+		return "redirect:/user/profile";
 	}
 }
