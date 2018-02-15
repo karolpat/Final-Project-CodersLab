@@ -50,10 +50,6 @@ public class Hotel {
 	@MapKeyColumn(name = "id")
 	private Map<Long, Room> rooms = new HashMap<Long, Room>();
 
-	@JsonManagedReference
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
-	@MapKeyColumn(name = "id")
-	private Map<Long, Comment> comments = new HashMap<Long, Comment>();
 
 	@JsonManagedReference
 	@OneToOne
@@ -128,14 +124,6 @@ public class Hotel {
 		this.rooms = rooms;
 	}
 
-	public Map<Long, Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(Map<Long, Comment> comments) {
-		this.comments = comments;
-	}
-
 
 	public Image getImages() {
 		return images;
@@ -148,7 +136,7 @@ public class Hotel {
 	@Override
 	public String toString() {
 		return "Hotel [id=" + id + ", name=" + name + ", rating=" + rating + ", standard=" + standard + ", address="
-				+ address + ", hOwner=" + hOwner + ", rooms=" + rooms + ", comments=" + comments + ", images=" + images
+				+ address + ", hOwner=" + hOwner + ", rooms=" + rooms +  ", images=" + images
 				+ "]";
 	}
 	

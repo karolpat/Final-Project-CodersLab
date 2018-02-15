@@ -131,7 +131,7 @@ public class HomeController {
 			Files.write(path, bytes);
 
 			redirectAttributes.addFlashAttribute("message",
-					"You successfully uploaded '" + file.getOriginalFilename().replaceAll(" ", "") + "'");
+					"You successfully uploaded new room");
 
 			Image image = new Image();
 			imageRepo.saveAndFlush(image);

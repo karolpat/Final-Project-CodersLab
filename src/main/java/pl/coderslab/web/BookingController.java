@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.coderslab.entity.Date;
 import pl.coderslab.entity.Room;
@@ -98,7 +99,6 @@ public class BookingController {
 	@PostMapping("/book/search")
 	public String test(@RequestParam("capacity") int capacity, @RequestParam("city") String city,
 			@RequestParam("from") String from, @RequestParam("to") String to, Model model) {
-log.info("jest");
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 		LocalDate startDate = dtf.parseLocalDate(from);
 		LocalDate endDate = dtf.parseLocalDate(to);
@@ -120,24 +120,14 @@ log.info("jest");
 
 		List<Room> toShow = new ArrayList<>();
 		for (Room r : tmp) {
-			log.info(r.getId()+" ");
-//			String[] starts = dateRepo.findAllStart(r.getId());
-//			String[] ends = dateRepo.findAllEnd(r.getId());
-//			Date[] starts = dateRepo.findAllStart(r.getId());
-//			Date[] ends = dateRepo.findAllEnd(r.getId());
 			
 			Date[] dates = dateRepo.findAllByRoomId(r.getId());
-			log.info(dates.length+" ");
 
 			if (dates.length==0) {
 				toShow.add(r);
-				log.info("tu");
 				
 			}else if(dates.length > 0) {
 				for(int i=0; i<dates.length; i++) {
-					log.info("tutaj");
-//					LocalDate str = (starts[i]);
-//					LocalDate str1 = dtf.parseLocalDate(ends[i]);
 					if(startDate.isAfter(dates[i].getEnd()) && i==dates.length-1)  {
 						log.info("if1");
 							toShow.add(r);
@@ -166,8 +156,8 @@ log.info("jest");
 		
 		Room room = roomRepo.findOne(id);
 		double price = room.getPrice();
-		double eur = currencies.get(1)/price;
-		double gbp = currencies.get(2)/price;
+		double eur = (price*currencies.get(0))/currencies.get(1);
+		double gbp = (price*currencies.get(0))/currencies.get(2);
 		
 		model.addAttribute("eur", eur);
 		model.addAttribute("gbp", gbp);
@@ -181,7 +171,8 @@ log.info("jest");
 	}
 	
 	@PostMapping("/book/confirm/{id}/{from}/{to}")
-	public String booking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to) {
+	public String booking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to, RedirectAttributes redirectAttributes) {
+		
 		
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 		LocalDate startDate = dtf.parseLocalDate(from);
@@ -191,21 +182,28 @@ log.info("jest");
 		Date date = new Date();
 		User user = userService.findByUserName(currentUser());
 		
-		date.setStart(startDate);
-		date.setEnd(endDate);
-		date.setRoom(roomRepo.findOne(id));
-		dateRepo.save(date);
+		if(user.isEnabled()==true) {
+			date.setStart(startDate);
+			date.setEnd(endDate);
+			date.setRoom(roomRepo.findOne(id));
+			dateRepo.save(date);
+			
+			List<User> hosts = room.getHost();
+			hosts.add(user);
+			roomRepo.save(room);
+			
+			List<Room> asHost = user.getRoomsAsHost();
+			asHost.add(room);
+			userRepo.save(user);
+			
+			log.info("success");
+			
+			return "redirect:/user/profile";
+		}else {
+			redirectAttributes.addFlashAttribute("info", "You have no permission to book a room.");
+			return "redirect:/";
+		}
 		
-		List<User> hosts = room.getHost();
-		hosts.add(user);
-		roomRepo.save(room);
 		
-		List<Room> asHost = user.getRoomsAsHost();
-		asHost.add(room);
-		userRepo.save(user);
-		
-		log.info("success");
-		
-		return "redirect:/user/profile";
 	}
 }

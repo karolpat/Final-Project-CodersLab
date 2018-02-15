@@ -30,9 +30,7 @@
 					<input id="inlineFormInputGroup" type="text" th:placeholder="${to}"
 						class="mr-3 form-control form-control" disabled="diabled" th:name="to">
 				</div>
-				<div class="form-group">
-					<input type="submit" value="Submit" class="mr-3 btn btn-primary">
-				</div>
+				
 			</form>
 			<div class="form-group">
 					<label for="inlineFormInputGroup" class="sr-only">Price</label>
@@ -42,11 +40,11 @@
 						class="mr-3 form-control form-control" disabled="diabled" th:name="to">
 					</li>
 					<li>
-					<input id="inlineFormInputGroup" type="text" th:placeholder="${eur}+' '+'EUR'"
+					<input id="inlineFormInputGroup" type="text" th:placeholder="${#numbers.formatDecimal(eur, 0, 2, 'COMMA')}+' '+'EUR'"
 						class="mr-3 form-control form-control" disabled="diabled" th:name="to">
 					</li>
 					<li>
-					<input id="inlineFormInputGroup" type="text" th:placeholder="${gbp}+' '+'GBP'"
+					<input id="inlineFormInputGroup" type="text" th:placeholder="${#numbers.formatDecimal(gbp, 0,2, 'COMMA')}+' '+'GBP'"
 						class="mr-3 form-control form-control" disabled="diabled" th:name="to">
 					</li>
 					</ul>

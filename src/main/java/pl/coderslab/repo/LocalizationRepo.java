@@ -14,6 +14,6 @@ public interface LocalizationRepo extends JpaRepository<Localization, Long> {
 //	@Query(value="select city from localization", nativeQuery=true)
 //	List<String> findAllCities();
 	
-	@Query(value="select city from localization where hotel_id is not null or room_id is not null", nativeQuery=true)
+	@Query(value="select city from localization", nativeQuery=true)
 	List<String> findAllCities();
 }
