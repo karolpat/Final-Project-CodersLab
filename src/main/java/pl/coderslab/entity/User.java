@@ -34,6 +34,8 @@ public class User {
 
 	private String firstName;
 	private String lastName;
+	
+	@JsonIgnore
 	private LocalDate created;
 	private String gender;
 	private String country;
@@ -54,7 +56,7 @@ public class User {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_role")
-	@JsonIgnore
+//	@JsonIgnore
 	private Role role;
 
 	@Column(columnDefinition = "Decimal(2,1) default 0.0")
@@ -90,6 +92,7 @@ public class User {
 	private boolean managerReq = false;
 
 	private boolean enableReq = false;
+	private boolean active = true;
 
 	// ------------------------------------------------
 
@@ -267,6 +270,14 @@ public class User {
 
 	public void setImage(Image image) {
 		this.image = image;
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override
