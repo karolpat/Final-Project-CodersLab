@@ -1,15 +1,12 @@
 package pl.coderslab.web;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,11 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.google.gson.Gson;
 
 import pl.coderslab.entity.Chat;
 import pl.coderslab.entity.Faq;
@@ -35,21 +29,18 @@ import pl.coderslab.entity.Localization;
 import pl.coderslab.entity.Message;
 import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
-import pl.coderslab.repo.ChatRepo;
-import pl.coderslab.repo.FaqRepo;
-import pl.coderslab.repo.MessageRepo;
-import pl.coderslab.repo.RoomRepo;
-import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.ChatService;
 import pl.coderslab.service.FaqService;
 import pl.coderslab.service.ImageService;
 import pl.coderslab.service.LocalizationService;
 import pl.coderslab.service.MessageService;
-import pl.coderslab.service.RoleService;
 import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
-import pl.coderslab.util.Currency;
 
+/**
+ * @author karolpat
+ *
+ */
 @Controller
 public class HomeController {
 
@@ -59,43 +50,64 @@ public class HomeController {
 	private ImageService imageService;
 	private LocalizationService localizationService;
 	private RoomService roomService;
-	private RoleService roleService;
 	private FaqService faqService;
 	private ChatService chatService;
 	private MessageService messageService;
 
-	@Autowired
-	private FaqRepo faqRepo;
-
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private RoomRepo roomRepo;
-
-	@Autowired
-	private ChatRepo chatRepo;
-
-	@Autowired
-	private MessageRepo messageRepo;
-
 	public HomeController(UserService userService, ImageService imageService, LocalizationService localizationService,
-			RoomService roomService, RoleService roleService, FaqService faqService, ChatService chatService, MessageService messageService) {
+			RoomService roomService, FaqService faqService, ChatService chatService, MessageService messageService) {
 		this.userService = userService;
 		this.imageService = imageService;
 		this.localizationService = localizationService;
 		this.roomService = roomService;
-		this.roleService = roleService;
 		this.faqService=faqService;
 		this.chatService=chatService;
 		this.messageService=messageService;
 	}
 
+	/** Quick method to get username of current logged in user.
+	 * @return username of curent user.
+	 */
 	public String currentUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication.getName();
 	}
+	
+	/** Registration form of new user.
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/register")
+	public String registerForm(Model model) {
 
+		model.addAttribute("user", new User());
+		return "register";
+	}
+
+	/** Registration form of new user.
+	 * @param user - new user that is being registering.
+	 * @param bresult
+	 * @param model
+	 * @return login form.
+	 */
+	@PostMapping("/register")
+	public String register(User user, BindingResult bresult, Model model) {
+		if (bresult.hasErrors()) {
+			model.addAttribute(user);
+			model.addAttribute("message", bresult.getAllErrors());
+			return "/register";
+
+		} else {
+			Image image = imageService.defaultUserImage();
+			userService.saveUser(user, image);
+			return "redirect:/login";
+		}
+	}
+
+	/** User(Owner role)
+	 * @param model
+	 * @return view of room addition form.
+	 */
 	@GetMapping("/owner/offer")
 	public String offerForm(Model model) {
 
@@ -108,6 +120,13 @@ public class HomeController {
 		return "offerForm";
 	}
 
+	/** Form to upload new room of User(Owner role)
+	 * @param room - entity to be save with parameters that are inserted by User.
+	 * @param localization - country, city and street that is inserted by User is bound to Localization entity. Room has only reference to this location.
+	 * @param file - image file that is uploaded by user.
+	 * @param redirectAttributes - allows to show message on redirected view.
+	 * @return
+	 */
 	@PostMapping("/owner/offer")
 	public String offer(Room room, Localization localization, @RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
@@ -130,6 +149,10 @@ public class HomeController {
 		return "redirect:/user/profile";
 	}
 
+	/**Form of user personal details editing.
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("user/profile/edit")
 	public String editForm(Model model) {
 
@@ -139,6 +162,12 @@ public class HomeController {
 		return "editForm";
 	}
 
+	/**Form of user personal details editing.
+	 * @param model
+	 * @param user - user of whom profile is edited. 
+	 * @param bresult
+	 * @return
+	 */
 	@PostMapping("/profile/edit")
 	public String saveEdit(Model model, User user, BindingResult bresult) {
 
@@ -152,45 +181,24 @@ public class HomeController {
 		}
 	}
 
-	@GetMapping("/register")
-	public String registerForm(Model model) {
-
-		model.addAttribute("user", new User());
-		model.addAttribute("roleList", roleService.findAll());
-		return "register";
-	}
-
-	@PostMapping("/register")
-	public String register(User user, BindingResult bresult, Model model) {
-		if (bresult.hasErrors()) {
-			model.addAttribute(user);
-			model.addAttribute("message", bresult.getAllErrors());
-			return "/register";
-
-		} else {
-			Image image = imageService.defaultUserImage();
-			userService.saveUser(user, image);
-			return "redirect:/login";
-		}
-	}
-
-	@GetMapping("/admin")
-	@ResponseBody
-	public String admin() {
-		return "admin";
-	}
-
+	
+	/** Welcome page where some room offers and faq section are presented.
+	 * @param model
+	 * @return index - welcome page;
+	 */
 	@GetMapping("/")
-	public String index(Model model) throws Exception {
+	public String index(Model model) {
 		log.info("some log");
 		model.addAttribute("rooms", roomService.findAll());
 		model.addAttribute("faqList", faqService.findAll());
-		Currency currency = new Currency();
 
-		currency.getCurrency();
 		return "index";
 	}
 
+	/** Changing faq question rate when user press the like button.
+	 * @param id - id of question from faq section that like button has been pressed.
+	 * @return welcome page.
+	 */
 	@RequestMapping("/like")
 	public String indexFaq(@RequestParam long id) {
 		Faq faq = faqService.findById(id);
@@ -199,28 +207,38 @@ public class HomeController {
 		return "redirect:/";
 	}
 
+	/** List of all rooms that user (Owner role) owns.
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/owner/rooms")
 	public String list(ModelMap model) {
 		User user = userService.findByUserName(currentUser());
 
-		// for(Room r : roomRepo.findAllByOwnerId(user.getId())) {
-		// log.info(r.getImage().getPath());
-		// }
+		//List of rooms that belong to current user (Owner role).
 		model.addAttribute("rooms", roomService.findAllByOwnerId(user.getId()));
 		return "roomList";
 	}
 
+	/** List of all available chats of current user.
+	 * @param model
+	 * @return a view with all chats.
+	 */
 	@GetMapping("/user/chat")
 	public String chat(Model model) {
 
 		User user = userService.findByUserName(currentUser());
-		List<Chat> chat = chatService.findAllByUserId(user.getId());
 
-		model.addAttribute("chat", chat);
-
+		//List of all chats
+		model.addAttribute("chat", chatService.findAllByUserId(user.getId()));
 		return "chat";
 	}
 
+	/** A list of messages between users in chat of given in URL id.
+	 * @param model
+	 * @param id - id of chat which messages are shown.
+	 * @return
+	 */
 	@GetMapping("/user/messages/{id}")
 	public String messages(Model model, @PathVariable("id") long id) {
 
@@ -231,6 +249,13 @@ public class HomeController {
 		return "messages";
 	}
 
+	/** Action to reply to user of id given in the URL. Author (sender) of the message is the current user.
+	 * @param request
+	 * @param to - id to find user who will receive the message.
+	 * @param chat - id of the chat where message will be added.
+	 * @param content - text that is sent between users.
+	 * @return
+	 */
 	@PostMapping("/user/message/{to}/{chat}")
 	public String reply(HttpServletRequest request, @PathVariable("to") long to, @PathVariable("chat") long chat,
 			@RequestParam("content") String content) {
@@ -242,14 +267,26 @@ public class HomeController {
 		return "redirect:" + previous;
 	}
 
+	/** Action to promote user room. Still TODO
+	 * @param id - id of room that should be promoted
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/room/promote/{id}")
 	public String promoteForm(@PathVariable("id") long id, Model model) {
-
+		
+		//TODO still does not work.
+		
 		model.addAttribute("room", roomService.findOne(id));
 
 		return "promoteForm";
 	}
 
+	/** The form to send message to user of id given in URL.
+	 * @param to - id of user who will receive the message.
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/send/{to}")
 	public String sendForm(@PathVariable("to") long to, Model model) {
 
@@ -259,48 +296,27 @@ public class HomeController {
 		return "sendForm";
 	}
 
+	/** Action of sending messages from author to receiver.
+	 * @param from - id of user (author) who sends the message.
+	 * @param to - id of user (receiver) who will receive the message.
+	 * @param content - text of the message.
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@PostMapping("/send/message/{to}/{from}")
 	public String sendMessage(@PathVariable("from") long from, @PathVariable("to") long to,
 			@RequestParam("content") String content, RedirectAttributes redirectAttributes) {
 
-		User author = userRepo.findOne(from);
-		User receiver = userRepo.findOne(to);
-
-		List<User> chatUserList = new ArrayList<User>();
-		chatUserList.add(author);
-		chatUserList.add(receiver);
-
-		Chat chat = new Chat();
-		chatRepo.saveAndFlush(chat);
-		// chatRepo.saveAndFlush(chat);
-
-		chat.setUser(chatUserList);
-
-		Message mess = new Message();
-		mess.setContent(content);
-		mess.setSendFrom(author);
-		mess.setSendTo(receiver);
-		mess.setCreated(LocalDate.now());
-		mess.setChat(chat);
-		messageRepo.saveAndFlush(mess);
-
-		List<Message> messList;
-
-		if (chat.getMessage() == null) {
-			messList = new ArrayList<>();
-		} else {
-			messList = chat.getMessage();
-		}
-		messList.add(mess);
-		chat.setMessage(messList);
-		log.info(mess.getContent());
-		chatRepo.save(chat);
-
+		User receiver = userService.findOne(to);
+		messageService.sendMessage(from, to, content);
 		redirectAttributes.addFlashAttribute("info", "Message to " + receiver.getUsername() + " sent.");
 
-		return "redirect:/admin/users";
+		return "redirect:/user/chat";
 	}
 
+	/** ModelAttribute to provide current user to views.
+	 * @param model
+	 */
 	@ModelAttribute
 	public void userModer(Model model) {
 		User user = userService.findByUserName(currentUser());

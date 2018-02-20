@@ -21,4 +21,12 @@ public class ChatService {
 	public Chat findOne(long id) {
 		return chatRepo.findOne(id);
 	}
+	
+	public void save(Chat chat) {
+		chatRepo.save(chat);
+	}
+	
+	public Chat saveAndFlush(Chat chat) {
+		return chatRepo.saveAndFlush(chat);
+	}
 }
