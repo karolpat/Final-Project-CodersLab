@@ -2,6 +2,7 @@ package pl.coderslab.service;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,11 @@ public class RoomService {
 	
 	public void addNewRoom(Image image, User user, Localization localization, Room room) {
 		
+		room.setOwner(user);
+		room.setAdded(LocalDate.now());
+		room.setImage(image);
+		room.setLocalization(localization);
+		roomRepo.save(room);
 	}
 
 }

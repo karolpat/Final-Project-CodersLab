@@ -96,7 +96,6 @@ public class HomeController {
 	}
 
 	public String currentUser() {
-
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication.getName();
 	}
@@ -118,39 +117,22 @@ public class HomeController {
 	public String offer(Room room, Localization localization, @RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
 
-		log.info(localization.getCity());
-		log.info(room.getName());
-
 		if (file.isEmpty()) {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
 			return "redirect:/user/offer";
 		}
-
 		try {
 
-			redirectAttributes.addFlashAttribute("message",
-					"You successfully uploaded new room");
-			
 			Image image = imageService.addNewImage(file);
 			Localization roomLocalization = localizationService.newLocalization(localization);
-			
-			roomRepo.saveAndFlush(room);
-
-			room.setImage(image);
 			User user = userService.findByUserName(currentUser());
-			room.setOwner(user);
-			room.setAdded(LocalDate.now());
-			// roomRepo.saveAndFlush(room);
-//			localRepo.saveAndFlush(localization);
-			room.setLocalization(localization);
-
-			localRepo.save(localization);
-			roomRepo.save(room);
-
+			roomService.addNewRoom(image, user, roomLocalization, room);
+			
+			redirectAttributes.addFlashAttribute("message",
+					"You successfully uploaded new room");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return "redirect:/user/profile";
 	}
 
@@ -158,28 +140,22 @@ public class HomeController {
 	public String editForm(Model model) {
 
 		User user = userService.findByUserName(currentUser());
-
 		model.addAttribute("user", user);
 
 		return "editForm";
 	}
 
 	@PostMapping("/profile/edit")
-	public String saveEdit(Model model, String firstName, String lastName, String gender, String country, String city,
-			String street, int phoneNumber) {
-
-		User user = userService.findByUserName(currentUser());
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setGender(gender);
-		user.setCountry(country);
-		user.setCity(city);
-		user.setStreet(street);
-		user.setPhoneNumber(phoneNumber);
-		log.info(user.toString());
-		userRepo.save(user);
-
-		return "redirect:/user/profile";
+	public String saveEdit(Model model, User user, BindingResult bresult) {
+		
+		if(!bresult.hasErrors()) {
+			User tmp = userService.findByUserName(currentUser());
+			userService.editUser(user, tmp.getId());
+			return "redirect:/user/profile";
+		}else {
+			
+			return "redirect:/user/profile/edit";
+		}
 	}
 
 	@RequestMapping("/charts")

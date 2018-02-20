@@ -74,7 +74,19 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findOne(id);
 		user.setActive(false);
 		userRepository.save(user);
+	}
+	
+	public void editUser(User user, long id) {
+		User tmp = userRepository.findOne(id);
 		
+		tmp.setFirstName(user.getFirstName());
+		tmp.setLastName(user.getLastName());
+		tmp.setGender(user.getGender());
+		tmp.setCountry(user.getCountry());
+		tmp.setCity(user.getCity());
+		tmp.setStreet(user.getStreet());
+		tmp.setPhoneNumber(user.getPhoneNumber());
+		userRepository.save(tmp);
 	}
 	
 	
