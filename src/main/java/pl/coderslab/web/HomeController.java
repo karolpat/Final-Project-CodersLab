@@ -255,8 +255,8 @@ public class HomeController {
 		faq.setRate(faq.getRate() + 1);
 		faqRepo.save(faq);
 		
-		User user= userService.findByUserName(currentUser());
-		log.info(user.getRole().getName());
+//		User user= userService.findByUserName(currentUser());
+//		log.info(user.getRole().getName());
 
 		return "redirect:/";
 	}

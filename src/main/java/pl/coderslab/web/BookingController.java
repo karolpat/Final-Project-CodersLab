@@ -112,31 +112,31 @@ public class BookingController {
 		List<Room> byHotel = roomRepo.findAllByHotelAddressCity(city);
 		byLocal.addAll(byHotel);
 		List<Room> tmp = new ArrayList<>();
-		for(Room r:byLocal) {
-			if(!tmp.contains(r) && r.getCapacity()>=capacity) {
+		for (Room r : byLocal) {
+			if (!tmp.contains(r) && r.getCapacity() >= capacity) {
 				tmp.add(r);
 			}
 		}
 
 		List<Room> toShow = new ArrayList<>();
 		for (Room r : tmp) {
-			
+
 			Date[] dates = dateRepo.findAllByRoomId(r.getId());
 
-			if (dates.length==0) {
+			if (dates.length == 0) {
 				toShow.add(r);
-				
-			}else if(dates.length > 0) {
-				for(int i=0; i<dates.length; i++) {
-					if(startDate.isAfter(dates[i].getEnd()) && i==dates.length-1)  {
+
+			} else if (dates.length > 0) {
+				for (int i = 0; i < dates.length; i++) {
+					if (startDate.isAfter(dates[i].getEnd()) && i == dates.length - 1) {
 						log.info("if1");
-							toShow.add(r);
-						}else if(startDate.isAfter(dates[i].getEnd()) && endDate.isBefore(dates[i+1].getStart())){
-							toShow.add(r);
-						}
+						toShow.add(r);
+					} else if (startDate.isAfter(dates[i].getEnd()) && endDate.isBefore(dates[i + 1].getStart())) {
+						toShow.add(r);
 					}
 				}
-			
+			}
+
 		}
 		model.addAttribute("city", city);
 		model.addAttribute("from", from);
@@ -147,63 +147,67 @@ public class BookingController {
 		return "/book/search";
 
 	}
-	
+
 	@GetMapping("/book/confirm/{id}/{from}/{to}")
-	public String confirmBooking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to, Model model) throws Exception {
-		
+	public String confirmBooking(@PathVariable("id") long id, @PathVariable("from") String from,
+			@PathVariable("to") String to, Model model) throws Exception {
+
 		Currency currency = new Currency();
 		List<Double> currencies = currency.getCurrency();
-		
+
 		Room room = roomRepo.findOne(id);
 		double price = room.getPrice();
-		double eur = (price*currencies.get(0))/currencies.get(1);
-		double gbp = (price*currencies.get(0))/currencies.get(2);
-		
+		double eur = (price * currencies.get(0)) / currencies.get(1);
+		double gbp = (price * currencies.get(0)) / currencies.get(2);
+
 		model.addAttribute("eur", eur);
 		model.addAttribute("gbp", gbp);
 		model.addAttribute("price", price);
 		model.addAttribute("from", from);
 		model.addAttribute("to", to);
 		model.addAttribute("room", room);
-		
-		
+
 		return "/book/confirmation";
 	}
-	
+
 	@PostMapping("/book/confirm/{id}/{from}/{to}")
-	public String booking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to, RedirectAttributes redirectAttributes) {
-		
-		
+	public String booking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to,
+			RedirectAttributes redirectAttributes) {
+
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
 		LocalDate startDate = dtf.parseLocalDate(from);
 		LocalDate endDate = dtf.parseLocalDate(to);
-		
+
 		Room room = roomRepo.findOne(id);
 		Date date = new Date();
 		User user = userService.findByUserName(currentUser());
-		
-		if(user.isEnabled()==true) {
-			date.setStart(startDate);
-			date.setEnd(endDate);
-			date.setRoom(roomRepo.findOne(id));
-			dateRepo.save(date);
-			
-			List<User> hosts = room.getHost();
-			hosts.add(user);
-			roomRepo.save(room);
-			
-			List<Room> asHost = user.getRoomsAsHost();
-			asHost.add(room);
-			userRepo.save(user);
-			
-			log.info("success");
-			
-			return "redirect:/user/profile";
+		if (user != null) {
+
+			if (user.isEnabled() == true) {
+				date.setStart(startDate);
+				date.setEnd(endDate);
+				date.setRoom(roomRepo.findOne(id));
+				dateRepo.save(date);
+
+				List<User> hosts = room.getHost();
+				hosts.add(user);
+				roomRepo.save(room);
+
+				List<Room> asHost = user.getRoomsAsHost();
+				asHost.add(room);
+				userRepo.save(user);
+
+				log.info("success");
+
+				return "redirect:/user/profile";
+			} else {
+				redirectAttributes.addFlashAttribute("info", "You have no permission to book a room.");
+				return "redirect:/";
+			}
 		}else {
-			redirectAttributes.addFlashAttribute("info", "You have no permission to book a room.");
+			redirectAttributes.addFlashAttribute("info", "You have no permission to book a room. Log in");
 			return "redirect:/";
 		}
-		
-		
+
 	}
 }

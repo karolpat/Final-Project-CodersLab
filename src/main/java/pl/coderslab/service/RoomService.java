@@ -37,5 +37,9 @@ public class RoomService {
 	public Room findOne(long id) {
 		return roomRepo.findOne(id);
 	}
+	
+	public List<Room> findAllByHost(long id){
+		return roomRepo.findAllHost(id);
+	}
 
 }

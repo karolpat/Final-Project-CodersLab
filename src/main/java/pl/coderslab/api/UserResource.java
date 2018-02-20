@@ -1,5 +1,6 @@
 package pl.coderslab.api;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,7 @@ public class UserResource {
 	
 	@PostMapping("/add")
 	ResponseEntity createUser(@RequestBody User user) {
+		user.setCreated(LocalDate.now());
 		userService.saveUser(user);
 		return ResponseEntity.accepted().build();
 	}
