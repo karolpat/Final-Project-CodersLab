@@ -37,6 +37,11 @@ public class MessageService {
 		return messageRepo.findAllByChatId(id);
 	}
 	
+	/** Method to reply to message
+	 * @param chat - id of chat where the messages are present.
+	 * @param idTo - id of the author of message.
+	 * @param content - text of the message.
+	 */
 	public void reply(Chat chat, long idTo, String content) {
 		Message message = new Message();
 		message.setChat(chat);
@@ -47,6 +52,11 @@ public class MessageService {
 		messageRepo.save(message);
 	}
 	
+	/** Method to send message to user.
+	 * @param idFrom - id of the author of the message.
+	 * @param idTo - id of the receiver of the message
+	 * @param content - text of the message.
+	 */
 	public void sendMessage(long idFrom, long idTo, String content) {
 		User author = userService.findOne(idFrom);
 		User receiver = userService.findOne(idTo);

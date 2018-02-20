@@ -1,12 +1,7 @@
 package pl.coderslab.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,46 +13,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import pl.coderslab.entity.Chat;
 import pl.coderslab.entity.Message;
 import pl.coderslab.entity.Request;
 import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
-import pl.coderslab.repo.ChatRepo;
-import pl.coderslab.repo.MessageRepo;
-import pl.coderslab.repo.RequestRepo;
-import pl.coderslab.repo.RoleRepo;
-import pl.coderslab.repo.RoomRepo;
-import pl.coderslab.repo.UserRepo;
+import pl.coderslab.service.MessageService;
+import pl.coderslab.service.RequestService;
+import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
 
+/**
+ * @author karolpat
+ *
+ */
 @Controller
 public class AdminController {
 
 	private UserService userServ;
+	private MessageService messageService;
+	private RequestService reqService;
+	private RoomService roomService;
 
-	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private RequestRepo reqRepo;
-
-	@Autowired
-	private RoleRepo roleRepo;
-
-	@Autowired
-	private RoomRepo roomRepo;
-
-	@Autowired
-	private ChatRepo chatRepo;
-
-	@Autowired
-	private MessageRepo messageRepo;
-
-	public AdminController(UserService userServ) {
+	public AdminController(UserService userServ, MessageService messageService, RequestService requestService, RoomService roomService) {
 		this.userServ = userServ;
+		this.messageService = messageService;
+		this.reqService = requestService;
+		this.roomService=roomService;
 	}
 
 	public String currentUser() {
@@ -66,218 +48,212 @@ public class AdminController {
 		return authentication.getName();
 	}
 
+	/**
+	 * List of all requests from users. Only for user with Admin role.
+	 * 
+	 * @param model
+	 * @return view with requests list.
+	 */
 	@GetMapping("/admin/requests")
 	public String showRequests(Model model) {
 
-		List<Request> reqList = reqRepo.findAllByChecked(false);
+		List<Request> reqList = reqService.findAllChecked(false);
 		model.addAttribute("rList", reqList);
 
 		return "/admin/requests";
 	}
 
+	/**
+	 * Action to accept user's request of becoming Owner.
+	 * 
+	 * @param id
+	 *            - id of the request.
+	 * @param redirectAttributes
+	 * @return redirect to requests list.
+	 */
 	@PostMapping("/admin/request/owner/{id}")
 	public String acceptOwnerReq(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-		Request req = reqRepo.findOne(id);
-		log.info("id" + req.getId());
-
-		req.setChecked(true);
-		User user = userRepo.findOne(req.getUser().getId());
-		user.setRole(roleRepo.findBySubName("Owner"));
-//		userServ.updateUser(user);
-
+		User user = reqService.acceptOwnerReq(id);
 		redirectAttributes.addFlashAttribute("info",
 				"Request of " + user.getUsername() + " accepted. Now has role - Owner");
 
-		userRepo.save(user);
-		reqRepo.save(req);
-
 		return "redirect:/admin/requests";
 	}
-	
+
+	/**
+	 * Action to reject user's request of becoming Owner.
+	 * 
+	 * @param id
+	 *            -id of the request.
+	 * @param redirectAttributes
+	 * @return redirect to requests list.
+	 */
 	@PostMapping("/admin/request/owner/reject/{id}")
 	public String rejectOwnerReq(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-		Request req = reqRepo.findOne(id);
-		log.info("id" + req.getId());
-
-		req.setChecked(true);
-		User user = userRepo.findOne(req.getUser().getId());
-		user.setOwnerReq(false);
+		User user = reqService.rejectOwnerReq(id);
 		redirectAttributes.addFlashAttribute("info",
 				"Request of " + user.getUsername() + " rejected. Role did not change.");
 
-		userRepo.save(user);
-		reqRepo.save(req);
-
 		return "redirect:/admin/requests";
 	}
-	
+
+	/**
+	 * Action to accept user's request of becoming Manager.
+	 * 
+	 * @param id
+	 *            id of the request.
+	 * @param redirectAttributes
+	 * @return redirect to requests list.
+	 */
 	@PostMapping("/admin/request/manager/{id}")
 	public String acceptManagerReq(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-		Request req = reqRepo.findOne(id);
-		log.info("id" + req.getId());
-
-		req.setChecked(true);
-		User user = userRepo.findOne(req.getUser().getId());
-		user.setRole(roleRepo.findBySubName("Manager"));
-//		userServ.updateUser(user);
-
+		User user = reqService.acceptManagerReq(id);
 		redirectAttributes.addFlashAttribute("info",
 				"Request of " + user.getUsername() + " accepted. Now has role - Manager");
 
-		userRepo.save(user);
-		reqRepo.save(req);
-
 		return "redirect:/admin/requests";
 	}
-	
+
+	/**
+	 * Action to reject user's request of becoming Manager.
+	 * 
+	 * @param id
+	 *            id of the request.
+	 * @param redirectAttributes
+	 * @return redirect to requests list.
+	 */
 	@PostMapping("/admin/request/manager/reject/{id}")
 	public String rejectManagerReq(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
-		Request req = reqRepo.findOne(id);
-		log.info("id" + req.getId());
-
-		req.setChecked(true);
-		User user = userRepo.findOne(req.getUser().getId());
-		user.setManagerReq(false);
-
+		User user = reqService.rejectManagerReq(id);
 		redirectAttributes.addFlashAttribute("info",
 				"Request of " + user.getUsername() + " rejected. Role did not change.");
 
-		userRepo.save(user);
-		reqRepo.save(req);
-
 		return "redirect:/admin/requests";
 	}
-	
+
+	/**
+	 * Action to accept user's request of becoming enabled
+	 * 
+	 * @param id
+	 *            id of the request.
+	 * @param redirectAttributes
+	 * @return redirect to requests list.
+	 */
 	@PostMapping("/admin/request/enable/{id}")
 	public String acceptEnableReq(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-		
-		Request req = reqRepo.findOne(id);
-		log.info("id" + req.getId());
 
-		req.setChecked(true);
-		User user = userRepo.findOne(req.getUser().getId());
-		log.info(user.toString());
-		user.setEnabled(true);
-
-		redirectAttributes.addFlashAttribute("info",
-				"User - " + user.getUsername() + " is now enabled.");
-		log.info(user.toString());
-		log.info(" "+user.isEnabled());
-
-		userRepo.save(user);
-		reqRepo.save(req);
+		User user = reqService.acceptEnableReq(id);
+		redirectAttributes.addFlashAttribute("info", "User - " + user.getUsername() + " is now enabled.");
 
 		return "redirect:/admin/requests";
 	}
-	
+
+	/**
+	 * Action to reject user's request of becoming enabled
+	 * 
+	 * @param id
+	 *            id of the request.
+	 * @param redirectAttributes
+	 * @return redirect to requests list.
+	 */
 	@PostMapping("/admin/request/enable/reject/{id}")
 	public String rejectEnableReq(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-		
-		Request req = reqRepo.findOne(id);
-		log.info("id" + req.getId());
 
-		req.setChecked(true);
-		User user = userRepo.findOne(req.getUser().getId());
-		log.info(user.toString());
-		user.setEnableReq(false);
-
-		redirectAttributes.addFlashAttribute("info",
-				"User - " + user.getUsername() + " is still unenable.");
-		log.info(user.toString());
-		log.info(" "+user.isEnabled());
-
-		userRepo.save(user);
-		reqRepo.save(req);
+		User user = reqService.rejectEnableReq(id);
+		redirectAttributes.addFlashAttribute("info", "User - " + user.getUsername() + " is still unenable.");
 
 		return "redirect:/admin/requests";
 	}
 
+	/**
+	 * Shows all details of user with id given in the URL, also rooms that is owner
+	 * of.
+	 * 
+	 * @param id
+	 *            id of the user to be shown.
+	 * @param model
+	 * @return view of table with user personal details.
+	 */
 	@GetMapping("/admin/user/{id}")
 	public String showUserDetails(@PathVariable("id") long id, Model model) {
 
-		User user = userRepo.findOne(id);
-		List<Room> rList = roomRepo.findAllByOwnerId(id);
+		User user = userServ.findOne(id);
+		List<Room> rList = roomService.findAllByOwnerId(id);
 		Message message = new Message();
-
-		log.info(user.toString());
-		log.info(user.getImage().getPath());
 
 		model.addAttribute("message", message);
 		model.addAttribute("rList", rList);
 		model.addAttribute("user", user);
-		
+
 		return "/admin/user/user";
 	}
 
+	/**
+	 * Shows all details of room with id given in the URL.
+	 * 
+	 * @param id
+	 *            id of the room to be shown.
+	 * @param model
+	 * @return view of table with room details.
+	 */
 	@GetMapping("/admin/user/room/{id}")
 	public String showUserRoom(@PathVariable("id") long id, Model model) {
 
-		Room room = roomRepo.findOne(id);
+		Room room = roomService.findOne(id);
 		model.addAttribute("room", room);
 
 		return "/admin/user/room";
 	}
 
+	/**
+	 * Action of sending messages from author to receiver.
+	 * 
+	 * @param from
+	 *            - id of user (author) who sends the message.
+	 * @param to
+	 *            - id of user (receiver) who will receive the message.
+	 * @param content
+	 *            - text of the message.
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@PostMapping("/admin/message/{to}/{from}")
-	public String sendMessage(@PathVariable("from") long from, @PathVariable("to") long to, @RequestParam("content") String content, RedirectAttributes redirectAttributes) {
-		
-		User author = userRepo.findOne(from);
-		User receiver = userRepo.findOne(to);
-		
-		List<User> chatUserList = new ArrayList<User>();
-		chatUserList.add(author);
-		chatUserList.add(receiver);
-		
-		Chat chat = new Chat();
-		chatRepo.saveAndFlush(chat);
-//		chatRepo.saveAndFlush(chat);
-		
-		chat.setUser(chatUserList);
-		
-		Message mess = new Message();
-		mess.setContent(content);
-		mess.setSendFrom(author);
-		mess.setSendTo(receiver);
-		mess.setCreated(LocalDate.now());
-		mess.setChat(chat);
-		messageRepo.saveAndFlush(mess);
-		
-		List<Message> messList;
-		
-		if(chat.getMessage()==null) {
-			messList = new ArrayList<>();
-		}else {
-			messList = chat.getMessage();
-		}
-		messList.add(mess);
-		chat.setMessage(messList);
-		log.info(mess.getContent());
-		chatRepo.save(chat);
-		
-		
-		redirectAttributes.addFlashAttribute("info",
-				"Message to " + receiver.getUsername() + " sent.");
+	public String sendMessage(@PathVariable("from") long from, @PathVariable("to") long to,
+			@RequestParam("content") String content, RedirectAttributes redirectAttributes) {
+
+		User receiver = userServ.findOne(to);
+		messageService.sendMessage(from, to, content);
+
+		redirectAttributes.addFlashAttribute("info", "Message to " + receiver.getUsername() + " sent.");
 
 		return "redirect:/admin/requests";
 	}
 
+	/**
+	 * List of all users. Possibility to send message to selected user.
+	 * 
+	 * @param model
+	 * @return view with all users.
+	 */
+	@GetMapping("/admin/users")
+	public String showUsers(Model model) {
+
+		model.addAttribute("users", userServ.getUsers());
+		return "/admin/users";
+	}
+	
+	/** ModelAttribute to provide current user to views.
+	 * @param model
+	 */
 	@ModelAttribute
 	public void userModer(Model model) {
 		User user = userServ.findByUserName(currentUser());
 		model.addAttribute("currUser", user);
 	}
-	
 
-	@GetMapping("/admin/users")
-	public String showUsers(Model model) {
-	
-		model.addAttribute("users", userRepo.findAll());
-		return "/admin/users";
-	}
-	
 
 }
