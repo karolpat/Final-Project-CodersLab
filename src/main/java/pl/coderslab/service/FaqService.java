@@ -1,5 +1,7 @@
 package pl.coderslab.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,9 @@ public class FaqService {
 	public void changeRate(Faq faq) {
 		faq.setRate(faq.getRate() + 1);
 		faqRepo.save(faq);
+	}
+	
+	public List<Faq> findAll(){
+		return faqRepo.findAll();
 	}
 }

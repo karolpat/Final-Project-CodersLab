@@ -40,9 +40,11 @@ import pl.coderslab.repo.FaqRepo;
 import pl.coderslab.repo.MessageRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
+import pl.coderslab.service.ChatService;
 import pl.coderslab.service.FaqService;
 import pl.coderslab.service.ImageService;
 import pl.coderslab.service.LocalizationService;
+import pl.coderslab.service.MessageService;
 import pl.coderslab.service.RoleService;
 import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
@@ -59,6 +61,8 @@ public class HomeController {
 	private RoomService roomService;
 	private RoleService roleService;
 	private FaqService faqService;
+	private ChatService chatService;
+	private MessageService messageService;
 
 	@Autowired
 	private FaqRepo faqRepo;
@@ -76,13 +80,15 @@ public class HomeController {
 	private MessageRepo messageRepo;
 
 	public HomeController(UserService userService, ImageService imageService, LocalizationService localizationService,
-			RoomService roomService, RoleService roleService, FaqService faqService) {
+			RoomService roomService, RoleService roleService, FaqService faqService, ChatService chatService, MessageService messageService) {
 		this.userService = userService;
 		this.imageService = imageService;
 		this.localizationService = localizationService;
 		this.roomService = roomService;
 		this.roleService = roleService;
 		this.faqService=faqService;
+		this.chatService=chatService;
+		this.messageService=messageService;
 	}
 
 	public String currentUser() {
@@ -177,8 +183,8 @@ public class HomeController {
 	@GetMapping("/")
 	public String index(Model model) throws Exception {
 		log.info("some log");
-		model.addAttribute("rooms", roomRepo.findAll());
-		model.addAttribute("faqList", faqRepo.findAll());
+		model.addAttribute("rooms", roomService.findAll());
+		model.addAttribute("faqList", faqService.findAll());
 		Currency currency = new Currency();
 
 		currency.getCurrency();
@@ -200,7 +206,7 @@ public class HomeController {
 		// for(Room r : roomRepo.findAllByOwnerId(user.getId())) {
 		// log.info(r.getImage().getPath());
 		// }
-		model.addAttribute("rooms", roomRepo.findAllByOwnerId(user.getId()));
+		model.addAttribute("rooms", roomService.findAllByOwnerId(user.getId()));
 		return "roomList";
 	}
 
@@ -208,10 +214,9 @@ public class HomeController {
 	public String chat(Model model) {
 
 		User user = userService.findByUserName(currentUser());
-		List<Chat> chat = chatRepo.findAllByUserId(user.getId());
+		List<Chat> chat = chatService.findAllByUserId(user.getId());
 
 		model.addAttribute("chat", chat);
-		log.info(chatRepo.findAllByUserId(user.getId()).get(0).toString());
 
 		return "chat";
 	}
@@ -219,7 +224,7 @@ public class HomeController {
 	@GetMapping("/user/messages/{id}")
 	public String messages(Model model, @PathVariable("id") long id) {
 
-		List<Message> mess = messageRepo.findAllByChatId(id);
+		List<Message> mess = messageService.findAllByChatId(id);
 
 		model.addAttribute("mess", mess);
 
@@ -229,37 +234,18 @@ public class HomeController {
 	@PostMapping("/user/message/{to}/{chat}")
 	public String reply(HttpServletRequest request, @PathVariable("to") long to, @PathVariable("chat") long chat,
 			@RequestParam("content") String content) {
-
 		String previous = request.getHeader("Referer");
 
-		Message message = new Message();
-		message.setChat(chatRepo.findOne(chat));
-		log.info(message.getChat().getId() + "ok");
-		message.setContent(content);
-		message.setCreated(LocalDate.now());
-		message.setSendFrom(userService.findByUserName(currentUser()));
-		message.setSendTo(userRepo.findOne(to));
-
-		messageRepo.save(message);
+		Chat tmpChat = chatService.findOne(chat);
+		messageService.reply(tmpChat, to, content);
+		
 		return "redirect:" + previous;
-	}
-
-	@GetMapping("/us")
-	@ResponseBody
-	public String list() {
-		List<User> list = userRepo.findAll();
-		Gson gson = new Gson();
-
-		String result = gson.toJson(list);
-
-		return result;
-
 	}
 
 	@GetMapping("/room/promote/{id}")
 	public String promoteForm(@PathVariable("id") long id, Model model) {
 
-		model.addAttribute("room", roomRepo.findOne(id));
+		model.addAttribute("room", roomService.findOne(id));
 
 		return "promoteForm";
 	}
@@ -267,7 +253,7 @@ public class HomeController {
 	@GetMapping("/send/{to}")
 	public String sendForm(@PathVariable("to") long to, Model model) {
 
-		User receiver = userRepo.findOne(to);
+		User receiver = userService.findOne(to);
 		model.addAttribute("user", receiver);
 
 		return "sendForm";
