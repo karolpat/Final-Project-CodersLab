@@ -47,6 +47,7 @@ import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.ImageService;
 import pl.coderslab.service.LocalizationService;
+import pl.coderslab.service.RoleService;
 import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
 import pl.coderslab.util.Currency;
@@ -54,14 +55,13 @@ import pl.coderslab.util.Currency;
 @Controller
 public class HomeController {
 
-	
-
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
 	private UserService userService;
 	private ImageService imageService;
 	private LocalizationService localizationService;
 	private RoomService roomService;
+	private RoleService roleService;
 
 	@Autowired
 	private FaqRepo faqRepo;
@@ -71,7 +71,7 @@ public class HomeController {
 
 	@Autowired
 	private LocalizationRepo localRepo;
- 
+
 	@Autowired
 	private UserRepo userRepo;
 
@@ -80,26 +80,26 @@ public class HomeController {
 
 	@Autowired
 	private RoomRepo roomRepo;
-	
+
 	@Autowired
 	private ChatRepo chatRepo;
-	
+
 	@Autowired
 	private MessageRepo messageRepo;
 
-
-	public HomeController(UserService userService, ImageService imageService, LocalizationService localizationService, RoomService roomService) {
+	public HomeController(UserService userService, ImageService imageService, LocalizationService localizationService,
+			RoomService roomService, RoleService roleService) {
 		this.userService = userService;
-		this.imageService=imageService;
-		this.localizationService=localizationService;
-		this.roomService=roomService;
+		this.imageService = imageService;
+		this.localizationService = localizationService;
+		this.roomService = roomService;
+		this.roleService = roleService;
 	}
 
 	public String currentUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication.getName();
 	}
-
 
 	@GetMapping("/owner/offer")
 	public String offerForm(Model model) {
@@ -127,9 +127,8 @@ public class HomeController {
 			Localization roomLocalization = localizationService.newLocalization(localization);
 			User user = userService.findByUserName(currentUser());
 			roomService.addNewRoom(image, user, roomLocalization, room);
-			
-			redirectAttributes.addFlashAttribute("message",
-					"You successfully uploaded new room");
+
+			redirectAttributes.addFlashAttribute("message", "You successfully uploaded new room");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -147,59 +146,35 @@ public class HomeController {
 
 	@PostMapping("/profile/edit")
 	public String saveEdit(Model model, User user, BindingResult bresult) {
-		
-		if(!bresult.hasErrors()) {
+
+		if (!bresult.hasErrors()) {
 			User tmp = userService.findByUserName(currentUser());
 			userService.editUser(user, tmp.getId());
 			return "redirect:/user/profile";
-		}else {
-			
+		} else {
+
 			return "redirect:/user/profile/edit";
 		}
-	}
-	
-
-	@RequestMapping("/charts")
-	public String charts() {
-		return "charts";
-	}
-
-	@RequestMapping("/forms")
-	public String forms() {
-		return "forms";
-	}
-
-	@RequestMapping("/tables")
-	public String tables() {
-		return "tables";
 	}
 
 	@GetMapping("/register")
 	public String registerForm(Model model) {
 
-		User u = new User();
-		model.addAttribute("user", u);
-
-		model.addAttribute("roleList", roleRepo.findAll());
+		model.addAttribute("user", new User());
+		model.addAttribute("roleList", roleService.findAll());
 		return "register";
 	}
 
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(@Valid User user, BindingResult bresult, Model model) {
+	@PostMapping("/register")
+	public String register(User user, BindingResult bresult, Model model) {
 		if (bresult.hasErrors()) {
-			log.info("błąd" + user.toString());
 			model.addAttribute(user);
 			model.addAttribute("message", bresult.getAllErrors());
 			return "/register";
 
 		} else {
-			log.info(user.toString());
-			user.setCreated(new LocalDate());
-			Image image = new Image();
-			image.setPath("../storage/default.jpg");
-			imageRepo.saveAndFlush(image);
-			user.setImage(image);
-			userService.saveUser(user);
+			Image image = imageService.defaultUserImage();
+			userService.saveUser(user, image);
 			return "redirect:/login";
 
 		}
@@ -217,7 +192,7 @@ public class HomeController {
 		model.addAttribute("rooms", roomRepo.findAll());
 		model.addAttribute("faqList", faqRepo.findAll());
 		Currency currency = new Currency();
-		
+
 		currency.getCurrency();
 		return "index";
 	}
@@ -227,9 +202,9 @@ public class HomeController {
 		Faq faq = faqRepo.findOne(id);
 		faq.setRate(faq.getRate() + 1);
 		faqRepo.save(faq);
-		
-//		User user= userService.findByUserName(currentUser());
-//		log.info(user.getRole().getName());
+
+		// User user= userService.findByUserName(currentUser());
+		// log.info(user.getRole().getName());
 
 		return "redirect:/";
 	}
@@ -245,44 +220,44 @@ public class HomeController {
 		return "roomList";
 	}
 
-	
 	@GetMapping("/user/chat")
 	public String chat(Model model) {
-		
+
 		User user = userService.findByUserName(currentUser());
 		List<Chat> chat = chatRepo.findAllByUserId(user.getId());
-		
+
 		model.addAttribute("chat", chat);
 		log.info(chatRepo.findAllByUserId(user.getId()).get(0).toString());
-		
+
 		return "chat";
 	}
-	
+
 	@GetMapping("/user/messages/{id}")
 	public String messages(Model model, @PathVariable("id") long id) {
-		
+
 		List<Message> mess = messageRepo.findAllByChatId(id);
-		
+
 		model.addAttribute("mess", mess);
-		
+
 		return "messages";
 	}
-	
+
 	@PostMapping("/user/message/{to}/{chat}")
-	public String reply(HttpServletRequest request, @PathVariable("to") long to, @PathVariable("chat") long chat, @RequestParam("content") String content) {
-		
+	public String reply(HttpServletRequest request, @PathVariable("to") long to, @PathVariable("chat") long chat,
+			@RequestParam("content") String content) {
+
 		String previous = request.getHeader("Referer");
-		
+
 		Message message = new Message();
 		message.setChat(chatRepo.findOne(chat));
-		log.info(message.getChat().getId()+"ok");
+		log.info(message.getChat().getId() + "ok");
 		message.setContent(content);
 		message.setCreated(LocalDate.now());
 		message.setSendFrom(userService.findByUserName(currentUser()));
 		message.setSendTo(userRepo.findOne(to));
-		
+
 		messageRepo.save(message);
-		return "redirect:"+previous;
+		return "redirect:" + previous;
 	}
 
 	@GetMapping("/us")
@@ -296,40 +271,41 @@ public class HomeController {
 		return result;
 
 	}
-	
+
 	@GetMapping("/room/promote/{id}")
 	public String promoteForm(@PathVariable("id") long id, Model model) {
-		
+
 		model.addAttribute("room", roomRepo.findOne(id));
-		
+
 		return "promoteForm";
 	}
-	
+
 	@GetMapping("/send/{to}")
 	public String sendForm(@PathVariable("to") long to, Model model) {
-		
+
 		User receiver = userRepo.findOne(to);
 		model.addAttribute("user", receiver);
-		
+
 		return "sendForm";
 	}
-	
+
 	@PostMapping("/send/message/{to}/{from}")
-	public String sendMessage(@PathVariable("from") long from, @PathVariable("to") long to, @RequestParam("content") String content, RedirectAttributes redirectAttributes) {
-		
+	public String sendMessage(@PathVariable("from") long from, @PathVariable("to") long to,
+			@RequestParam("content") String content, RedirectAttributes redirectAttributes) {
+
 		User author = userRepo.findOne(from);
 		User receiver = userRepo.findOne(to);
-		
+
 		List<User> chatUserList = new ArrayList<User>();
 		chatUserList.add(author);
 		chatUserList.add(receiver);
-		
+
 		Chat chat = new Chat();
 		chatRepo.saveAndFlush(chat);
-//		chatRepo.saveAndFlush(chat);
-		
+		// chatRepo.saveAndFlush(chat);
+
 		chat.setUser(chatUserList);
-		
+
 		Message mess = new Message();
 		mess.setContent(content);
 		mess.setSendFrom(author);
@@ -337,26 +313,24 @@ public class HomeController {
 		mess.setCreated(LocalDate.now());
 		mess.setChat(chat);
 		messageRepo.saveAndFlush(mess);
-		
+
 		List<Message> messList;
-		
-		if(chat.getMessage()==null) {
+
+		if (chat.getMessage() == null) {
 			messList = new ArrayList<>();
-		}else {
+		} else {
 			messList = chat.getMessage();
 		}
 		messList.add(mess);
 		chat.setMessage(messList);
 		log.info(mess.getContent());
 		chatRepo.save(chat);
-		
-		
-		redirectAttributes.addFlashAttribute("info",
-				"Message to " + receiver.getUsername() + " sent.");
+
+		redirectAttributes.addFlashAttribute("info", "Message to " + receiver.getUsername() + " sent.");
 
 		return "redirect:/admin/users";
 	}
-	
+
 	@ModelAttribute
 	public void userModer(Model model) {
 		User user = userService.findByUserName(currentUser());

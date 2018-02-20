@@ -1,16 +1,12 @@
 package pl.coderslab.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
+import org.joda.time.LocalDate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import pl.coderslab.dto.CreateUserDto;
-import pl.coderslab.dto.UserDTO;
-import pl.coderslab.dto.UserMapper;
+import pl.coderslab.entity.Image;
 import pl.coderslab.entity.Role;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.RoleRepo;
@@ -37,10 +33,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void saveUser(User user) {
+	public void saveUser(User user, Image image) {
+		
+		user.setCreated(new LocalDate());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Role userRole = roleRepository.findByName("ROLE_USER");
 		user.setRole(userRole);
+		user.setImage(image);
 		userRepository.save(user);
 
 	}

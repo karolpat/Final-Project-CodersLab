@@ -33,4 +33,12 @@ public class ImageService {
 		
 		return image;
 	}
+	
+	public Image defaultUserImage() {
+		
+		Image image = new Image();
+		image.setPath("../storage/default.jpg");
+		imageRepo.save(image);
+		return image;
+	}
 }
