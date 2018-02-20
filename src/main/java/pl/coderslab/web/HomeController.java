@@ -1,9 +1,6 @@
 package pl.coderslab.web;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,20 +45,23 @@ import pl.coderslab.repo.MessageRepo;
 import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
+import pl.coderslab.service.ImageService;
+import pl.coderslab.service.LocalizationService;
+import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
 import pl.coderslab.util.Currency;
 
 @Controller
 public class HomeController {
 
-	private static String UPLOADED_FOLDER = "/home/karolpat/eclipse-workspace/demo2/src/main/resources/static/storage/";
+	
 
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
 	private UserService userService;
-
-	// @Autowired
-	// private StudentRepo stud;
+	private ImageService imageService;
+	private LocalizationService localizationService;
+	private RoomService roomService;
 
 	@Autowired
 	private FaqRepo faqRepo;
@@ -88,8 +88,11 @@ public class HomeController {
 	private MessageRepo messageRepo;
 
 
-	public HomeController(UserService userService) {
+	public HomeController(UserService userService, ImageService imageService, LocalizationService localizationService, RoomService roomService) {
 		this.userService = userService;
+		this.imageService=imageService;
+		this.localizationService=localizationService;
+		this.roomService=roomService;
 	}
 
 	public String currentUser() {
@@ -125,31 +128,24 @@ public class HomeController {
 
 		try {
 
-			// Get the file and save it somewhere
-			byte[] bytes = file.getBytes();
-			Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename().replaceAll(" ", ""));
-			Files.write(path, bytes);
-
 			redirectAttributes.addFlashAttribute("message",
 					"You successfully uploaded new room");
-
-			Image image = new Image();
-			imageRepo.saveAndFlush(image);
-
+			
+			Image image = imageService.addNewImage(file);
+			Localization roomLocalization = localizationService.newLocalization(localization);
+			
 			roomRepo.saveAndFlush(room);
 
-			image.setPath("../storage/" + file.getOriginalFilename().replaceAll(" ", ""));
 			room.setImage(image);
 			User user = userService.findByUserName(currentUser());
 			room.setOwner(user);
 			room.setAdded(LocalDate.now());
 			// roomRepo.saveAndFlush(room);
-			localRepo.saveAndFlush(localization);
+//			localRepo.saveAndFlush(localization);
 			room.setLocalization(localization);
 
 			localRepo.save(localization);
 			roomRepo.save(room);
-			imageRepo.save(image);
 
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -11,18 +11,6 @@ public class LoginController {
 
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	public String loginForm() {
-
-		// User u = new User();
-		// model.addAttribute("user", u);
-		//
 		return LOGIN_TEMPLATE;
 	}
-
-	// @RequestMapping(value="/login", method = RequestMethod.POST)
-	// public String login() {
-	//
-	// return "redirect: index";
-	// }
-
-
 }

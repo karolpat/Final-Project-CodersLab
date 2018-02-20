@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pl.coderslab.entity.Image;
+import pl.coderslab.entity.Localization;
 import pl.coderslab.entity.Room;
+import pl.coderslab.entity.User;
 import pl.coderslab.repo.RoomRepo;
 
 @Service
@@ -40,6 +43,10 @@ public class RoomService {
 	
 	public List<Room> findAllByHost(long id){
 		return roomRepo.findAllHost(id);
+	}
+	
+	public void addNewRoom(Image image, User user, Localization localization, Room room) {
+		
 	}
 
 }
