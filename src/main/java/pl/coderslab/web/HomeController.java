@@ -157,6 +157,7 @@ public class HomeController {
 			return "redirect:/user/profile/edit";
 		}
 	}
+	
 
 	@RequestMapping("/charts")
 	public String charts() {
