@@ -176,7 +176,6 @@ public class HomeController {
 			Image image = imageService.defaultUserImage();
 			userService.saveUser(user, image);
 			return "redirect:/login";
-
 		}
 	}
 

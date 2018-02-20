@@ -87,6 +87,15 @@ public class UserServiceImpl implements UserService {
 		tmp.setPhoneNumber(user.getPhoneNumber());
 		userRepository.save(tmp);
 	}
+
+	@Override
+	public void saveUser(User user) {
+		user.setCreated(new LocalDate());
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		Role userRole = roleRepository.findByName("ROLE_USER");
+		user.setRole(userRole);
+		userRepository.save(user);		
+	}
 	
 	
 
