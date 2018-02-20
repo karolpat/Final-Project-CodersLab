@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,12 +37,10 @@ import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
 import pl.coderslab.repo.ChatRepo;
 import pl.coderslab.repo.FaqRepo;
-import pl.coderslab.repo.ImageRepo;
-import pl.coderslab.repo.LocalizationRepo;
 import pl.coderslab.repo.MessageRepo;
-import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
+import pl.coderslab.service.FaqService;
 import pl.coderslab.service.ImageService;
 import pl.coderslab.service.LocalizationService;
 import pl.coderslab.service.RoleService;
@@ -62,21 +58,13 @@ public class HomeController {
 	private LocalizationService localizationService;
 	private RoomService roomService;
 	private RoleService roleService;
+	private FaqService faqService;
 
 	@Autowired
 	private FaqRepo faqRepo;
 
 	@Autowired
-	private RoleRepo roleRepo;
-
-	@Autowired
-	private LocalizationRepo localRepo;
-
-	@Autowired
 	private UserRepo userRepo;
-
-	@Autowired
-	private ImageRepo imageRepo;
 
 	@Autowired
 	private RoomRepo roomRepo;
@@ -88,12 +76,13 @@ public class HomeController {
 	private MessageRepo messageRepo;
 
 	public HomeController(UserService userService, ImageService imageService, LocalizationService localizationService,
-			RoomService roomService, RoleService roleService) {
+			RoomService roomService, RoleService roleService, FaqService faqService) {
 		this.userService = userService;
 		this.imageService = imageService;
 		this.localizationService = localizationService;
 		this.roomService = roomService;
 		this.roleService = roleService;
+		this.faqService=faqService;
 	}
 
 	public String currentUser() {
@@ -198,12 +187,8 @@ public class HomeController {
 
 	@RequestMapping("/like")
 	public String indexFaq(@RequestParam long id) {
-		Faq faq = faqRepo.findOne(id);
-		faq.setRate(faq.getRate() + 1);
-		faqRepo.save(faq);
-
-		// User user= userService.findByUserName(currentUser());
-		// log.info(user.getRole().getName());
+		Faq faq = faqService.findById(id);
+		faqService.changeRate(faq);
 
 		return "redirect:/";
 	}
