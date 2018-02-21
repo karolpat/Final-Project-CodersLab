@@ -21,6 +21,10 @@ public class HotelService {
 		return hotelRepo.findAllByHOwnerId(id);
 	}
 	
+	public Hotel findById(long id) {
+		return hotelRepo.findOne(id);
+	}
+	
 	public void addHotel(Hotel hotel, Image image, Localization hotelLocalization, User user) {
 		hotel.sethOwner(user);
 		hotel.setImages(image);

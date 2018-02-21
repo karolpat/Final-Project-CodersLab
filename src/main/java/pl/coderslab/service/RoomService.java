@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.coderslab.entity.Date;
+import pl.coderslab.entity.Hotel;
 import pl.coderslab.entity.Image;
 import pl.coderslab.entity.Localization;
 import pl.coderslab.entity.Room;
@@ -127,4 +128,18 @@ public class RoomService {
 		return toShow;
 	}
 
+	/** Adds new room to given hotel, sets given image and current user as an owner.
+	 * @param hotel - hotel where the room is added
+	 * @param image - image of the room to be added.
+	 * @param user - user who is the owner of the room.
+	 */
+	public void addNewHotelRoom(Hotel hotel, Image image, User user) {
+		Room room = new Room();
+		room.setId(0);
+		room.setLocalization(hotel.getAddress());
+		room.setHotel(hotel);
+		room.setAdded(LocalDate.now());
+		room.setImage(image);
+		roomRepo.save(room);
+	}
 }
