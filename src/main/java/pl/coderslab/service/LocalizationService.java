@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pl.coderslab.entity.Hotel;
 import pl.coderslab.entity.Localization;
+import pl.coderslab.entity.Room;
 import pl.coderslab.repo.LocalizationRepo;
 
 /**
@@ -33,5 +35,23 @@ public class LocalizationService {
 	 */
 	public List<String> findAllCities(){
 		return localizationRepo.findAllCities();
+	}
+	
+	/** Save given hotel to given localization.
+	 * @param localization - localization of the hotel.
+	 * @param hotel - hotel of given localization.
+	 */
+	public void hotelLocalization(Localization localization, Hotel hotel) {
+		localization.setHotel(hotel);
+		localizationRepo.save(localization);
+	}
+	
+	/** Save given room to given localization.
+	 * @param localization - localization of the room.
+	 * @param room - room of given localization.
+	 */
+	public void roomLocalization(Localization localization, Room room) {
+		localization.setRoom(room);
+		localizationRepo.save(localization);
 	}
 }

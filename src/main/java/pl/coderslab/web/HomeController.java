@@ -141,6 +141,7 @@ public class HomeController {
 			Localization roomLocalization = localizationService.newLocalization(localization);
 			User user = userService.findByUserName(currentUser());
 			roomService.addNewRoom(image, user, roomLocalization, room);
+			localizationService.roomLocalization(roomLocalization, room);
 
 			redirectAttributes.addFlashAttribute("message", "You successfully uploaded new room");
 		} catch (IOException e) {
