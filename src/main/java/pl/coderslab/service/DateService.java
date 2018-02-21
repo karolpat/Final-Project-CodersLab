@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import pl.coderslab.entity.Date;
 import pl.coderslab.repo.DateRepo;
+import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.web.HomeController;
 
 /**
@@ -19,13 +20,13 @@ import pl.coderslab.web.HomeController;
 @Service
 public class DateService {
 
-	private RoomService roomService;
+	private RoomRepo roomRepo;
 	
 	@Autowired
 	private DateRepo dateRepo;
 	
-	public DateService(RoomService roomService) {
-		this.roomService=roomService;
+	public DateService(RoomRepo roomRepo) {
+		this.roomRepo=roomRepo;
 	}
 
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
@@ -92,7 +93,7 @@ public class DateService {
 		Date date = new Date();
 		date.setStart(startDate(from));
 		date.setEnd(endDate(to));
-		date.setRoom(roomService.findOne(id));
+		date.setRoom(roomRepo.findOne(id));
 		dateRepo.save(date);
 	}
 
