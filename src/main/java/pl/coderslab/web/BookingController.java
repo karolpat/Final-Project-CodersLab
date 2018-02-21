@@ -3,12 +3,8 @@ package pl.coderslab.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,18 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import pl.coderslab.entity.Date;
 import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
-import pl.coderslab.repo.ChatRepo;
-import pl.coderslab.repo.DateRepo;
-import pl.coderslab.repo.FaqRepo;
-import pl.coderslab.repo.ImageRepo;
-import pl.coderslab.repo.LocalizationRepo;
-import pl.coderslab.repo.MessageRepo;
-import pl.coderslab.repo.RoleRepo;
-import pl.coderslab.repo.RoomRepo;
-import pl.coderslab.repo.UserRepo;
+import pl.coderslab.service.DateService;
+import pl.coderslab.service.LocalizationService;
+import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
 import pl.coderslab.util.Currency;
 
@@ -40,36 +29,16 @@ public class BookingController {
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
 	private UserService userService;
+	private LocalizationService localizationService;
+	private RoomService roomService;
+	private DateService dateService;
 
-	@Autowired
-	private FaqRepo faqRepo;
-
-	@Autowired
-	private RoleRepo roleRepo;
-
-	@Autowired
-	private LocalizationRepo localRepo;
-
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private ImageRepo imageRepo;
-
-	@Autowired
-	private RoomRepo roomRepo;
-
-	@Autowired
-	private ChatRepo chatRepo;
-
-	@Autowired
-	private MessageRepo messageRepo;
-
-	@Autowired
-	private DateRepo dateRepo;
-
-	public BookingController(UserService userService) {
+	public BookingController(UserService userService, DateService dateService, RoomService roomService,
+			LocalizationService localizationService) {
 		this.userService = userService;
+		this.localizationService = localizationService;
+		this.roomService = roomService;
+		this.dateService = dateService;
 	}
 
 	public String currentUser() {
@@ -78,76 +47,75 @@ public class BookingController {
 		return authentication.getName();
 	}
 
+	/**
+	 * Provide the list of cities to thymeleaf room booking form.
+	 * 
+	 * @param model
+	 * @return view of room booking form.
+	 */
 	@GetMapping("/book")
 	public String showForm(Model model) {
 
-		List<String> cities = localRepo.findAllCities();
+		List<String> cities = localizationService.findAllCities();
 		List<String> tmp = new ArrayList<>();
 		for (String c : cities) {
 			if (!tmp.contains(c)) {
 				tmp.add(c);
 			}
 		}
-
 		model.addAttribute("cities", tmp);
-		// model.addAttribute("start", dateRepo.findAllStart());
-		// model.addAttribute("end", dateRepo.findAllEnd());
-
 		return "/book/bookForm";
 	}
 
+	/**
+	 * Provide list of rooms that are available and fulfill conditions given by the
+	 * user. First checks whether selected dates are correct. Start date must not be
+	 * before end date and before current date.
+	 * 
+	 * @param capacity
+	 *            - number of people.
+	 * @param city
+	 *            - city of the room.
+	 * @param from
+	 *            - start date.
+	 * @param to
+	 *            - end date.
+	 * @param model
+	 * @return view with rooms to be booked.
+	 */
 	@PostMapping("/book/search")
-	public String test(@RequestParam("capacity") int capacity, @RequestParam("city") String city,
+	public String checkParamsAndSearch(@RequestParam("capacity") int capacity, @RequestParam("city") String city,
 			@RequestParam("from") String from, @RequestParam("to") String to, Model model) {
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
-		LocalDate startDate = dtf.parseLocalDate(from);
-		LocalDate endDate = dtf.parseLocalDate(to);
 
-		if (startDate.isAfter(endDate) || startDate.isBefore(LocalDate.now())) {
+		if (dateService.checkDates(from, to) == false) {
 			model.addAttribute("info", "Please select correct dates");
 			return "/book/bookForm";
 		}
+		List<Room> toShow = roomService.availableSearchedRooms(city, capacity, from, to);
 
-		List<Room> byLocal = roomRepo.findAllByLocalizationCity(city);
-		List<Room> byHotel = roomRepo.findAllByHotelAddressCity(city);
-		byLocal.addAll(byHotel);
-		List<Room> tmp = new ArrayList<>();
-		for (Room r : byLocal) {
-			if (!tmp.contains(r) && r.getCapacity() >= capacity) {
-				tmp.add(r);
-			}
-		}
-
-		List<Room> toShow = new ArrayList<>();
-		for (Room r : tmp) {
-
-			Date[] dates = dateRepo.findAllByRoomId(r.getId());
-
-			if (dates.length == 0) {
-				toShow.add(r);
-
-			} else if (dates.length > 0) {
-				for (int i = 0; i < dates.length; i++) {
-					if (startDate.isAfter(dates[i].getEnd()) && i == dates.length - 1) {
-						log.info("if1");
-						toShow.add(r);
-					} else if (startDate.isAfter(dates[i].getEnd()) && endDate.isBefore(dates[i + 1].getStart())) {
-						toShow.add(r);
-					}
-				}
-			}
-
-		}
 		model.addAttribute("city", city);
-		model.addAttribute("from", from);
-		model.addAttribute("to", to);
+		model.addAttribute("from", dateService.startDate(from));
+		model.addAttribute("to", dateService.startDate(to));
 		model.addAttribute("capacity", capacity);
 		model.addAttribute("rooms", toShow);
 
 		return "/book/search";
-
 	}
 
+	/**
+	 * Confirmation page where user can check the booking room again and price in 3
+	 * currencies: USD, EUR and GBP.
+	 * 
+	 * @param id
+	 *            - id of the room to be shown.
+	 * @param from
+	 *            - start date of the reservation.
+	 * @param to
+	 *            - end date of the reservation.
+	 * @param model
+	 * @return view with confirmation page.
+	 * @throws Exception
+	 */
 	@GetMapping("/book/confirm/{id}/{from}/{to}")
 	public String confirmBooking(@PathVariable("id") long id, @PathVariable("from") String from,
 			@PathVariable("to") String to, Model model) throws Exception {
@@ -155,7 +123,7 @@ public class BookingController {
 		Currency currency = new Currency();
 		List<Double> currencies = currency.getCurrency();
 
-		Room room = roomRepo.findOne(id);
+		Room room = roomService.findOne(id);
 		double price = room.getPrice();
 		double eur = (price * currencies.get(0)) / currencies.get(1);
 		double gbp = (price * currencies.get(0)) / currencies.get(2);
@@ -170,44 +138,48 @@ public class BookingController {
 		return "/book/confirmation";
 	}
 
+	/**
+	 * When the room is confirmed by user it is booked. New date is saved in
+	 * reference to room by given id. Room's list of hosts is updated by new user
+	 * who booked the room. User's list of rooms as host is updated by new room
+	 * which booked.
+	 * 
+	 * @param id
+	 *            - id of the room to be booked.
+	 * @param from
+	 *            - start date.
+	 * @param to
+	 *            - end date.
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@PostMapping("/book/confirm/{id}/{from}/{to}")
 	public String booking(@PathVariable("id") long id, @PathVariable("from") String from, @PathVariable("to") String to,
 			RedirectAttributes redirectAttributes) {
 
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
-		LocalDate startDate = dtf.parseLocalDate(from);
-		LocalDate endDate = dtf.parseLocalDate(to);
-
-		Room room = roomRepo.findOne(id);
-		Date date = new Date();
+		Room room = roomService.findOne(id);
 		User user = userService.findByUserName(currentUser());
 		if (user != null) {
 
 			if (user.isEnabled() == true) {
-				date.setStart(startDate);
-				date.setEnd(endDate);
-				date.setRoom(roomRepo.findOne(id));
-				dateRepo.save(date);
+				dateService.bookRoom(from, to, id);
 
 				List<User> hosts = room.getHost();
 				hosts.add(user);
-				roomRepo.save(room);
+				roomService.save(room);
 
 				List<Room> asHost = user.getRoomsAsHost();
 				asHost.add(room);
-				userRepo.save(user);
-
-				log.info("success");
+				userService.save(user);
 
 				return "redirect:/user/profile";
 			} else {
 				redirectAttributes.addFlashAttribute("info", "You have no permission to book a room.");
 				return "redirect:/";
 			}
-		}else {
+		} else {
 			redirectAttributes.addFlashAttribute("info", "You have no permission to book a room. Log in");
 			return "redirect:/";
 		}
-
 	}
 }
