@@ -42,6 +42,7 @@
 						<td th:text="${user.email}">Email</td>
 						<td th:text="${user.role.subName}">Role</td>
 						<td><ul th:each="r:${rList}">
+						<li th:text="${r.name}"></li>
 <!-- 								<li><form method="GET" -->
 <!-- 										th:action="@{'/admin/user/room/{id}' (id=${r.id})}"> -->
 <!-- 										<button type="submit" name="submit" th:text="${r.id}" -->

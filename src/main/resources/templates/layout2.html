@@ -65,6 +65,8 @@
 					<li th:if="${currUser?.role !=null and currUser.role.subName == 'Owner'}"><a th:href="@{/owner/offer}"> <i class="icon-form"></i>Add offer</a>
 					<li th:if="${currUser?.role !=null and currUser.role.subName == 'Owner'}"><a th:href="@{/owner/rooms}"> <i class="icon-form"></i>Show my offers</a>
 					<li th:if="${currUser?.role !=null and currUser.role.subName == 'Manager'}"><a th:href="@{/manager/hotels}"> <i class="icon-form"></i>Show my hotels</a>
+					<li th:if="${currUser?.role !=null and currUser.role.subName == 'Admin'}"><a th:href="@{/admin/requests}"> <i class="icon-form"></i>Show requests</a>
+					<li><a th:href="@{/user/rooms}"> <i class="icon-form"></i>Show my reservations</a>
 					<li><a th:href="@{/user/chat}"> <i class="icon-form"></i>Chat</a>
 					<li><a th:href="@{/book}"> <i class="icon-form"></i>Search for the room</a>
 				</ul>
