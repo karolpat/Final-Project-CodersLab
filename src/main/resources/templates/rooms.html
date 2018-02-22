@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="layout2">
+<section layout:fragment="content">
+<div class="container">
+		<!-- Daily Feed Widget-->
+		<div id="daily-feeds" class="card updates daily-feeds">
+			<div id="feeds-header"
+				class="card-header d-flex justify-content-between align-items-center">
+				<h2 class="h5 display">
+					<a data-toggle="collapse" data-parent="#daily-feeds"
+						href="#feeds-box" aria-expanded="true" aria-controls="feeds-box">Your
+						rooms</a>
+				</h2>
+			</div>
+			<div id="feeds-box" role="tabpanel" class="collapse show">
+				<div class="feed-box">
+					<ul class="feed-elements list-unstyled">
+						<!-- List-->
+						<li class="clearfix">
+							<div class="feed d-flex justify-content-between">
+								<div class="feed-body d-flex justify-content-between"
+									th:if="${room?.image?.path}">
+									<img th:src="@{|${room.image.path}|}" alt="room pic"
+										class="img-fluid" style="width: 200px; height: 190px">
+									<div class="content" style="margin-left: 50px">
+										<div class="row">
+
+											<div class="col-lg-4" th:if="${room?.name}">
+												<small th:text="'Room name'"></small><strong
+													th:text="${room.name}">name</strong>
+											</div>
+
+											<div class="col-lg-4" th:if="${room?.area}">
+												<small th:text="'Room area'"></small><strong
+													th:text="${room.area}">name</strong>
+											</div>
+											<div class="col-lg-4" th:if="${room?.price}">
+												<small th:text="'Price per day'"></small><strong
+													th:text="${room.price}">name</strong>
+											</div>
+										</div>
+										<br>
+										<div class="row">
+
+											<div class="col-lg-4" th:if="${room?.localization?.country}">
+												<small th:text="'Country'"></small><strong
+													th:text="${room.localization.country}">name</strong>
+											</div>
+
+											<div class="col-lg-4" th:if="${room?.localization?.city}">
+												<small th:text="'City'"></small><strong
+													th:text="${room.localization.city}">name</strong>
+											</div>
+											<div class="col-lg-4" th:if="${room?.localization?.street}">
+												<small th:text="'Street'"></small><strong
+													th:text="${room.localization.street}">name</strong>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="date" th:if="${room?.added}">
+									<small th:text="${room.added}">5min ago</small>
+								</div>
+							</div>
+						</li>
+						<!-- List-->
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- Daily Feed Widget End-->
+	</div>
+	</section>
+</html>

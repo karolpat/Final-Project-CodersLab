@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -33,6 +32,7 @@ import pl.coderslab.repo.RequestRepo;
 import pl.coderslab.repo.RoleRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.repo.UserRepo;
+import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
 @Controller
 public class UserController {
@@ -46,6 +46,7 @@ public class UserController {
 	private final String WAIT = "Please wait until admin accept your request.";
 	
 	private UserService userService;
+	private RoomService roomService;
 	
 	@Autowired
 	private FaqRepo faqRepo;
@@ -69,8 +70,9 @@ public class UserController {
 	private RequestRepo reqRepo;
 
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService, RoomService roomService) {
 		this.userService = userService;
+		this.roomService = roomService;
 	}
 
 	public String currentUser() {
@@ -180,6 +182,15 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return "redirect:/user/profile";
+	}
+	
+	@GetMapping("/user/rooms")
+	public String roomsAsHost(Model model) {
+
+		User user = userService.findByUserName(currentUser());
+		model.addAttribute("room", roomService.findAllByHost(user.getId()));
+		
+		return "rooms";
 	}
 	
 	@ModelAttribute
