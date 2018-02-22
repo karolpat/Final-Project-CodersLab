@@ -58,9 +58,3 @@ After all above steps are done, run this project as Spring Boot App. (Eclipse - 
 As mentioned above, a free bootstrap template is used in this project.
 
 
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
