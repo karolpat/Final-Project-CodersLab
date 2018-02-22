@@ -1,11 +1,7 @@
 package pl.coderslab.web;
 
 import java.io.IOException;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,16 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.coderslab.entity.Image;
-import pl.coderslab.entity.Request;
-import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
-import pl.coderslab.repo.FaqRepo;
-import pl.coderslab.repo.ImageRepo;
-import pl.coderslab.repo.LocalizationRepo;
-import pl.coderslab.repo.RequestRepo;
-import pl.coderslab.repo.RoleRepo;
-import pl.coderslab.repo.RoomRepo;
-import pl.coderslab.repo.UserRepo;
 import pl.coderslab.service.ImageService;
 import pl.coderslab.service.RequestService;
 import pl.coderslab.service.RoomService;
@@ -37,36 +24,12 @@ import pl.coderslab.service.UserService;
 @Controller
 public class UserController {
 
-	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
-	private static String UPLOADED_FOLDER = "/home/karolpat/eclipse-workspace/demo2/src/main/resources/static/storage/";
-
 	private final String WAIT = "Please wait until admin accept your request.";
 
 	private UserService userService;
 	private RoomService roomService;
 	private ImageService imageService;
 	private RequestService requestService;
-
-	@Autowired
-	private FaqRepo faqRepo;
-
-	@Autowired
-	private RoleRepo roleRepo;
-
-	@Autowired
-	private LocalizationRepo localRepo;
-
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private ImageRepo imageRepo;
-
-	@Autowired
-	private RoomRepo roomRepo;
-
-	@Autowired
-	private RequestRepo reqRepo;
 
 	public UserController(UserService userService, RoomService roomService, ImageService imageService,
 			RequestService requestService) {
