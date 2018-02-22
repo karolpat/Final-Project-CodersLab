@@ -2,7 +2,7 @@
 
 Simple web project made on purpose to accomplish Java course in CodersLab. In this project Spring Boot, thymeleaf and Bootstrap template are used. Main feature is based on possibility of creating an account for users and book a room in a hotel or apartment. All offers are added by registered users.
 
-Note: in this project a free bootstrap templete is used. The templete belongs to https://bootstrapious.com[bootstrapious].
+Note: in this project a free bootstrap templete is used. The templete belongs to https://bootstrapious.com.
 
 
 ## Getting Started
@@ -20,10 +20,23 @@ Main features:
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
+This project uses Spring Boot, Maven and MySQL. Changing application.properties you can set the server port that is 
 ```
-Give examples
+5555
+```
+by default and database is named
+```
+final
+```
+Before launching the project please fill the database with table as follow:
+```
+CREATE TABLE `role` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(255) COLLATE utf8_polish_ci DEFAULT NULL,
+  `sub_name` varchar(255) COLLATE utf8_polish_ci DEFAULT NULL,
+  PRIMARY KEY (`role_id`));
+
+INSERT INTO `role` VALUES (1,'ROLE_USER','User'),(2,'ROLE_ADMIN','Admin'),(3,'ROLE_MANAGER','Manager'),(4,'ROLE_OWNER','Owner');
 ```
 
 ### Installing
