@@ -1,6 +1,6 @@
 # RoomBooking Service
 
-Simple web project made on purpose to accomplish Java course in CodersLab. In this project Spring Boot, thymeleaf and Bootstrap template are used. Main feature is based on possibility of creating an account for users and book a room in a hotel or apartment. All offers are added by registered users.
+Simple web project made on purpose to accomplish Java course in CodersLab. In this project Spring Boot, thymeleaf and Bootstrap template are used. Main feature is based on possibility of creating an account for users and booking a room in a hotel or apartment. All offers are added by registered users.
 
 Note: in this project a free bootstrap templete is used. The templete belongs to https://bootstrapious.com.
 
@@ -8,14 +8,14 @@ Note: in this project a free bootstrap templete is used. The templete belongs to
 ## Getting Started
 
 Main features:
-* Create new user (user role) account using unique username and email. All user's credentials as well as encrypted password are stored in datbase.
-* Give user an opportunity to search for the room by room's location, room's capacity and in exact period of time.
+* Creating new user (user role) account using unique username and email. All user's credentials as well as encrypted password are stored in database.
+* Giving user an opportunity to search for the room by room's location, room's capacity and in exact period of time.
 * Only enabled users are allowed to book a room.
 * User become allowed after sending request to admin (admin role) and accepting this request by admin.
 * User could become an Owner (owner role) and create offers of his rooms to be booked. To do so, user sends request to the admin.
 * User could become a Hotel Manager (manager role) and create offers of his hotels with rooms to be booked. To do so, user sends request to the admin.
 * Admin pannel to control users' requests. There is a list of all current requests. There are two options: accept or reject the request. Before that, admin has possibility to check all personal details of the user.
-* Show room's price in three currencies: USD, EUR and GBP. Price is auto-calculated using NBP (National Polish Bank) API with up-to-date data.
+* Showing room's price in three currencies: USD, EUR and GBP. Price is auto-calculated using NBP (National Polish Bank) API with up-to-date data.
 * Possibility of sending messages between users.
 
 ### Prerequisites
@@ -47,9 +47,10 @@ After all above steps are done, run this project as Spring Boot App. (Eclipse - 
 ### TODO
  
 * Reset user's password.
-* Sending emails to user.
+* Send emails to user.
 * Enable to add more than one picture.
 * Add valiadation to forms.
+* Promote offers.
 
 ## Authors
 
