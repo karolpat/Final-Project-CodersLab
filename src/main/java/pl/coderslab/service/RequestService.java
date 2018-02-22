@@ -16,6 +16,10 @@ import pl.coderslab.repo.RequestRepo;
 @Service
 public class RequestService {
 
+	private final String GET_OWNER = "I want to become an owner.";
+	private final String GET_MANAGER="I want to become a manager.";
+	private final String GET_ENABLED = "I want to get enabled.";
+
 	private UserService userService;
 	private RoleService roleService;
 
@@ -164,5 +168,50 @@ public class RequestService {
 		Request req = requestRepo.findOne(id);
 		req.setChecked(true);
 		return req;
+	}
+
+	/**
+	 * Sends user's request to become an owner.
+	 * 
+	 * @param user
+	 *            - user who wants to be an owner.
+	 */
+	public void sendOwnerReq(User user) {
+		Request req = new Request();
+
+		req.setDescription(GET_OWNER);
+		req.setUser(user);
+
+		requestRepo.save(req);
+	}
+	
+	/**
+	 * Sends user's request to become a manager.
+	 * 
+	 * @param user
+	 *            - user who wants to be a manager.
+	 */
+	public void sendManagerReq(User user) {
+		Request req = new Request();
+
+		req.setDescription(GET_MANAGER);
+		req.setUser(user);
+
+		requestRepo.save(req);
+	}
+
+	/**
+	 * Sends user's request to become enabled.
+	 * 
+	 * @param user
+	 *            - user who wants to be enabled.
+	 */
+	public void sendEnableReq(User user) {
+		Request req = new Request();
+
+		req.setDescription(GET_ENABLED);
+		req.setUser(user);
+
+		requestRepo.save(req);
 	}
 }

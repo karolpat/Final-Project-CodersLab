@@ -101,6 +101,12 @@ public class UserServiceImpl implements UserService {
 	public void save(User user) {
 		userRepository.save(user);
 	}
+
+	@Override
+	public void saveWithImage(User user, Image image) {
+		user.setImage(image);
+		userRepository.save(user);
+	}
 	
 	
 

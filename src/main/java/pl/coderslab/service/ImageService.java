@@ -34,6 +34,9 @@ public class ImageService {
 		return image;
 	}
 	
+	/** Sets default user's avatar while register.
+	 * @return
+	 */
 	public Image defaultUserImage() {
 		
 		Image image = new Image();
