@@ -20,11 +20,11 @@ Main features:
 
 ### Prerequisites
 
-This project uses Spring Boot, Maven and MySQL. Changing application.properties you can set the server port that is 
+This project uses Spring Boot, Hibernate, Maven and MySQL and Thymeleaf as a base for views. Changing application.properties you can set the server port that is by default
 ```
 5555
 ```
-by default and database is named
+and database is named
 ```
 final
 ```
@@ -41,69 +41,22 @@ INSERT INTO `role` VALUES (1,'ROLE_USER','User'),(2,'ROLE_ADMIN','Admin'),(3,'RO
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
+After all above steps are done, run this project as Spring Boot App. (Eclipse - STS is used in my case).
 
-Say what the step will be
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+### TODO
+ 
+* Reset user's password.
+* Sending emails to user.
+* Enable to add more than one picture.
+* Add valiadation to forms.
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Karol Patecki** as **karolpat** 
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+As mentioned above, a free bootstrap template is used in this project.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
