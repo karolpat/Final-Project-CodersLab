@@ -1,5 +1,6 @@
 package pl.coderslab.service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import pl.coderslab.entity.Image;
@@ -76,5 +77,7 @@ public interface UserService {
 	 * @param image - uploaded by user image.
 	 */
 	public void saveWithImage(User user, Image image);
+	
+	public List<BigInteger> findRoomsWhereUserIsHost(long id);
 	
 }

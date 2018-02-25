@@ -20,7 +20,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "users")
 public class User {
@@ -31,7 +30,6 @@ public class User {
 	@Column(nullable = false, unique = true)
 	@NotBlank
 	private String username;
-
 	private String firstName;
 	private String lastName;
 	
@@ -56,19 +54,10 @@ public class User {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_role")
-//	@JsonIgnore
 	private Role role;
 
 	@Column(columnDefinition = "Decimal(2,1) default 0.0")
 	private double rate = 0;
-
-	// @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-	// @JsonManagedReference
-	// private List<Appartment> asOwner;
-
-	// @OneToMany(mappedBy="hOwner", fetch=FetchType.EAGER)
-	// @JsonManagedReference
-	// private List<Hotel> hotels;
 
 	@ManyToMany(mappedBy = "host", fetch = FetchType.EAGER)
 	@JsonIgnore
@@ -78,19 +67,11 @@ public class User {
 	@JsonIgnore
 	private List<Room> roomsAsOwner;
 
-	// @JsonManagedReference
-	// @OneToMany(fetch = FetchType.EAGER, mappedBy="user")
-	// @MapKeyColumn(name="id")
-	// private Map<Long, Comment> comments = new HashMap<Long, Comment>();
-
 	@OneToOne
 	@JsonIgnore
 	private Image image;
-
 	private boolean ownerReq = false;
-
 	private boolean managerReq = false;
-
 	private boolean enableReq = false;
 	private boolean active = true;
 
@@ -255,14 +236,6 @@ public class User {
 	public void setRoomsAsHost(List<Room> roomsAsHost) {
 		this.roomsAsHost = roomsAsHost;
 	}
-
-	// public Map<Long, Comment> getComments() {
-	// return comments;
-	// }
-	//
-	// public void setComments(Map<Long, Comment> comments) {
-	// this.comments = comments;
-	// }
 
 	public Image getImage() {
 		return image;

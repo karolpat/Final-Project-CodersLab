@@ -1,5 +1,6 @@
 package pl.coderslab.service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -106,6 +107,11 @@ public class UserServiceImpl implements UserService {
 	public void saveWithImage(User user, Image image) {
 		user.setImage(image);
 		userRepository.save(user);
+	}
+
+	@Override
+	public List<BigInteger> findRoomsWhereUserIsHost(long id) {
+		return userRepository.findByUser(id);
 	}
 	
 	

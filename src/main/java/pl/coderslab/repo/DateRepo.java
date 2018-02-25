@@ -15,4 +15,7 @@ public interface DateRepo extends JpaRepository<Date, Long> {
 
 	Date[] findAllByRoomId(long id);
 	
+	@Query(value="select * from date where room_id= ? and host_id= ?", nativeQuery=true)
+	Date findByRoomIdAndHostId(long room, long host);
+	
 }

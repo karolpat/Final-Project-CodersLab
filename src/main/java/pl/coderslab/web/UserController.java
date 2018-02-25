@@ -1,7 +1,12 @@
 package pl.coderslab.web;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import pl.coderslab.entity.Date;
 import pl.coderslab.entity.Image;
+import pl.coderslab.entity.Room;
 import pl.coderslab.entity.User;
+import pl.coderslab.service.DateService;
 import pl.coderslab.service.ImageService;
 import pl.coderslab.service.RequestService;
 import pl.coderslab.service.RoomService;
@@ -30,13 +38,19 @@ public class UserController {
 	private RoomService roomService;
 	private ImageService imageService;
 	private RequestService requestService;
+	private DateService dateService;
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
 
 	public UserController(UserService userService, RoomService roomService, ImageService imageService,
-			RequestService requestService) {
+			RequestService requestService, DateService dateService) {
 		this.userService = userService;
 		this.roomService = roomService;
 		this.imageService = imageService;
 		this.requestService = requestService;
+		this.dateService=dateService;
 	}
 
 	public String currentUser() {
@@ -142,12 +156,25 @@ public class UserController {
 		}
 		return "redirect:/user/profile";
 	}
-
+//TODO
 	@GetMapping("/user/rooms")
 	public String roomsAsHost(Model model) {
 
 		User user = userService.findByUserName(currentUser());
-		model.addAttribute("room", roomService.findAllByHost(user.getId()));
+		List<BigInteger> roomId = userService.findRoomsWhereUserIsHost(user.getId());
+		List<Room> rList = new ArrayList<>();
+		List<Date> dList = new ArrayList<>();
+		for(BigInteger i : roomId) {
+			log.info(i+"");
+			rList.add(roomService.findOne(i.longValue()));
+			if(dateService.findyByRoomAndHost(i.longValue(), user.getId())!=null) {
+				dList.add(dateService.findyByRoomAndHost(i.longValue(), user.getId()));
+			}
+			
+		}
+		//TODO zrobic widok dla dat
+		model.addAttribute("date", dList);
+		model.addAttribute("rooms", rList);
 
 		return "rooms";
 	}

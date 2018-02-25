@@ -159,7 +159,7 @@ public class BookingController {
 		if (user != null) {
 
 			if (user.isEnabled() == true) {
-				dateService.bookRoom(from, to, id);
+				dateService.bookRoom(from, to, id, user);
 
 				List<User> hosts = room.getHost();
 				hosts.add(user);

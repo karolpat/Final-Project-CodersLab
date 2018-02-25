@@ -1,9 +1,13 @@
 package pl.coderslab.web;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +40,7 @@ import pl.coderslab.service.LocalizationService;
 import pl.coderslab.service.MessageService;
 import pl.coderslab.service.RoomService;
 import pl.coderslab.service.UserService;
+import pl.coderslab.util.PdfGenerating;
 
 /**
  * @author karolpat
@@ -91,7 +96,7 @@ public class HomeController {
 	 * @return login form.
 	 */
 	@PostMapping("/register")
-	public String register(User user, BindingResult bresult, Model model) {
+	public String register(User user, BindingResult bresult, Model model){
 		if (bresult.hasErrors()) {
 			model.addAttribute(user);
 			model.addAttribute("message", bresult.getAllErrors());
@@ -186,13 +191,26 @@ public class HomeController {
 	/** Welcome page where some room offers and faq section are presented.
 	 * @param model
 	 * @return index - welcome page;
+	 * @throws FileNotFoundException 
 	 */
 	@GetMapping("/")
-	public String index(Model model) {
-		log.info("some log");
+	public String index(Model model, HttpServletResponse response) throws FileNotFoundException {
 		model.addAttribute("rooms", roomService.findAll());
 		model.addAttribute("faqList", faqService.findAll());
-
+		PdfGenerating test = new PdfGenerating();
+		String fileName = "pdfs/"+currentUser();
+		test.testPdf(fileName);
+		//TODO
+//		 try {
+//		      // get your file as InputStream
+//		      InputStream is = new FileInputStream(fileName);
+//		      // copy it to response's OutputStream
+//		      org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+//		      response.flushBuffer();
+//		    } catch (IOException ex) {
+//		      log.info("Error writing file to output stream. Filename was '{}'", fileName, ex);
+//		      throw new RuntimeException("IOError writing file to output stream");
+//		    }
 		return "index";
 	}
 

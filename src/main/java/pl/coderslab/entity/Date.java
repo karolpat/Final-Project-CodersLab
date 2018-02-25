@@ -1,11 +1,11 @@
 package pl.coderslab.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.joda.time.LocalDate;
 
@@ -25,10 +25,23 @@ public class Date {
 //	@Column(columnDefinition = "DATE")
 	private LocalDate end;
 	
+	@OneToOne
+	private User host;
+	
 	//======================
 
+	
+	
 	public long getId() {
 		return id;
+	}
+
+	public User getHost() {
+		return host;
+	}
+
+	public void setHost(User host) {
+		this.host = host;
 	}
 
 	public void setId(long id) {

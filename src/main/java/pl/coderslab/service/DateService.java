@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.coderslab.entity.Date;
+import pl.coderslab.entity.User;
 import pl.coderslab.repo.DateRepo;
 import pl.coderslab.repo.RoomRepo;
 import pl.coderslab.web.HomeController;
@@ -89,12 +90,17 @@ public class DateService {
 	 * @param to - end date.
 	 * @param id - id of the room to be booked.
 	 */
-	public void bookRoom(String from, String to, long id) {
+	public void bookRoom(String from, String to, long id, User user) {
 		Date date = new Date();
 		date.setStart(startDate(from));
 		date.setEnd(endDate(to));
 		date.setRoom(roomRepo.findOne(id));
+		date.setHost(user);
 		dateRepo.save(date);
+	}
+	
+	public Date findyByRoomAndHost(long room, long host) {
+		return dateRepo.findByRoomIdAndHostId(room, host);
 	}
 
 }
