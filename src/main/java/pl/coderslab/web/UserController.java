@@ -1,5 +1,6 @@
 package pl.coderslab.web;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -156,7 +157,6 @@ public class UserController {
 		}
 		return "redirect:/user/profile";
 	}
-//TODO
 	@GetMapping("/user/rooms")
 	public String roomsAsHost(Model model) {
 
@@ -172,11 +172,17 @@ public class UserController {
 			}
 			
 		}
-		//TODO zrobic widok dla dat
 		model.addAttribute("date", dList);
 		model.addAttribute("rooms", rList);
 
 		return "rooms";
+	}
+	
+	@GetMapping("/user/rooms/printPDF/{roomId}/{dateId}")
+	public String printPdf(@PathVariable("roomId") long roomId, @PathVariable("dateId") long dateId) throws FileNotFoundException {
+		User user = userService.findByUserName(currentUser());
+		userService.printConfirmation(roomId, dateId, user);
+		return "redirect:/user/rooms";
 	}
 
 	@ModelAttribute

@@ -28,6 +28,7 @@
 							<th>Area</th>
 							<th>Capacity</th>
 							<th>When?</th>
+							<th>PDF</th>
 						</tr>
 					</thead>
 					<th:block th:each="room,iterStat : ${rooms}">
@@ -41,6 +42,7 @@
 							<td th:text="${room.area}">Area</td>
 							<td th:text="${room.capacity}">Capacity</td>
 							<td th:text="${date[iterStat.index].start}+' - '+${date[iterStat.index].end}">Time</td>
+							<td><a th:href="@{'/user/rooms/printPDF/{roomId}/{dateId}' (roomId=${room.Id}, dateId=${date[iterStat.index].id})}" th:text="'Print PDF'">PDF</a> </td>
 						</tr>
 					</th:block>
 				</table>
