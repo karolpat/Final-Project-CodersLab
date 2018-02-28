@@ -10,11 +10,6 @@ import pl.coderslab.entity.User;
 
 public interface RoomRepo extends JpaRepository<Room, Long> {
 
-//	List<Room> findAllByPromoted(boolean promoted);
-//
-//	List<Room> findAllByOwnerUsername(String username);
-//
-//	List<Room> findAllByHostUsername(String username);
 	
 	List<Room> findAllByOwnerId(long id);
 	
@@ -24,6 +19,10 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
 	
 	List<Room> findAllByHotelAddressCity(String city);
 	
+	/** Gives list of rooms for which user by given id is a host.
+	 * @param id - id of user who is host in rooms returned in the list.
+	 * @return
+	 */
 	@Query(value="select * from room where host.id= ?", nativeQuery=true)
 	List<Room> findAllHost(long id);
 	
