@@ -9,11 +9,10 @@ import pl.coderslab.entity.Localization;
 
 public interface LocalizationRepo extends JpaRepository<Localization, Long> {
 
-	
-//	Localization findByUserId(long id);
-//	@Query(value="select city from localization", nativeQuery=true)
-//	List<String> findAllCities();
-	
-	@Query(value="select city from localization", nativeQuery=true)
+
+	/** Gives list of cities where rooms are located without repetitions.
+	 * @return
+	 */
+	@Query(value="select distinct city from localization", nativeQuery=true)
 	List<String> findAllCities();
 }

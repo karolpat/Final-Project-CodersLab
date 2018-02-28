@@ -30,7 +30,7 @@ public class LocalizationService {
 		return tmp;
 	}
 	
-	/** Method to get all cities that are present in database.
+	/** Method to get all cities where rooms are located.
 	 * @return List of cities.
 	 */
 	public List<String> findAllCities(){

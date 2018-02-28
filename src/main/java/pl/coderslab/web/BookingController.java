@@ -54,13 +54,7 @@ public class BookingController {
 	public String showForm(Model model) {
 
 		List<String> cities = localizationService.findAllCities();
-		List<String> tmp = new ArrayList<>();
-		for (String c : cities) {
-			if (!tmp.contains(c)) {
-				tmp.add(c);
-			}
-		}
-		model.addAttribute("cities", tmp);
+		model.addAttribute("cities", cities);
 		return "/book/bookForm";
 	}
 
