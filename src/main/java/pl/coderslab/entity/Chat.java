@@ -28,6 +28,12 @@ public class Chat {
 	private List<User> user;
 	
 	//------------------------
+	
+	public Chat() {}
+
+	public Chat(long id) {
+		this.setId(id);
+	}
 
 	public long getId() {
 		return id;

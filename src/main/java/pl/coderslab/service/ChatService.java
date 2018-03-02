@@ -14,6 +14,10 @@ public class ChatService {
 	@Autowired
 	private ChatRepo chatRepo;
 	
+	public ChatService(ChatRepo chatRepo) {
+		this.chatRepo=chatRepo;
+	}
+	
 	public List<Chat> findAllByUserId(long id){
 		return chatRepo.findAllByUserId(id);
 	}

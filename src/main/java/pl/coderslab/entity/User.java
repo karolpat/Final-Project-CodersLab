@@ -76,6 +76,12 @@ public class User {
 	private boolean active = true;
 
 	// ------------------------------------------------
+	
+	public User() {}
+	
+	public User(long id) {
+		this.setId(id);
+	}
 
 	public Long getId() {
 		return id;
