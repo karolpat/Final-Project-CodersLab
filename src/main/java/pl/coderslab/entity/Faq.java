@@ -19,6 +19,12 @@ public class Faq {
 	private String answer;
 	
 	private int rate;
+	
+	public Faq() {}
+
+	public Faq(long id) {
+		this.id = id;
+	}
 
 	public long getId() {
 		return id;

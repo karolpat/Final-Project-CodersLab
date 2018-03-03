@@ -17,6 +17,10 @@ public class HotelService {
 	@Autowired
 	private HotelRepo hotelRepo;
 	
+	public HotelService(HotelRepo hotelRepo) {
+		this.hotelRepo=hotelRepo;
+	}
+	
 	public List<Hotel> findAllByHOwnerId(long id){
 		return hotelRepo.findAllByHOwnerId(id);
 	}

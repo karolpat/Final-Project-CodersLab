@@ -14,6 +14,10 @@ public class FaqService {
 	@Autowired
 	private FaqRepo faqRepo;
 	
+	public FaqService(FaqRepo faqRepo) {
+		this.faqRepo=faqRepo;
+	}
+	
 	public Faq findById(long id) {
 		return faqRepo.findOne(id);
 	}
