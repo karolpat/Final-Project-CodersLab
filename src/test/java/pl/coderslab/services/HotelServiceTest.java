@@ -73,10 +73,6 @@ public class HotelServiceTest {
 		Localization localization = new Localization();
 		User user = new User();
 		
-		first.setImages(image);
-		first.setAddress(localization);
-		first.sethOwner(user);
-		
 		//adding attributes to hotel and saving the hotel to database
 		hotelService.addHotel(first, image, localization, user);
 		
