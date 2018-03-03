@@ -61,22 +61,26 @@ public class HotelServiceTest {
 
 	@Test
 	public void testAddHotel() {
-		
-		assertThat(hotelService.findById(1)).isNull();
-		
+		//creates hotel and checks whether attributes added by method are null
 		Hotel first = new Hotel();
+		when(hotelRepo.findOne(1l)).thenReturn(first);
+		assertThat(hotelService.findById(1).getAddress()).isNull();
+		assertThat(hotelService.findById(1).gethOwner()).isNull();
+		assertThat(hotelService.findById(1).getImages()).isNull();
+		
+		//creates attributes that are added to hotel while using method
 		Image image = new Image();
 		Localization localization = new Localization();
 		User user = new User();
 		
-		first.setId(1l);
 		first.setImages(image);
 		first.setAddress(localization);
 		first.sethOwner(user);
 		
+		//adding attributes to hotel and saving the hotel to database
 		hotelService.addHotel(first, image, localization, user);
-		when(hotelRepo.findOne(1l)).thenReturn(first);
 		
+		//returns hotel from database
 		Hotel result = hotelService.findById(1);
 		
 		assertThat(result).isNotNull();
